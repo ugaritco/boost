@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+use Heritage\Contracts\View\View;
+use Heritage\Http\Request;
+use Heritage\Http\Response;
+use Heritage\Support\Facades\Route;
+use Heritage\Support\Facades\Vite;
+use Heritage\Testing\TestResponse;
+use Ugarit\Boost\Middleware\InjectBoost;
+use Pest\Expectation;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+beforeEach(function (): void {
+    $this->app['view']->addNamespace('test', __DIR__.'/../../Fixtures');
+});
+
+function createMiddlewareResponse($response): SymfonyResponse
+{
+    $middleware = new InjectBoost;
+    $request = new Request;
+    $next = fn ($request) => $response;
+
+    return $middleware->handle($request, $next);
+}
+
+it('preserves the original view response type', function (): void {
+    Route::get('injection-test', fn (): View|\Heritage\Contracts\View\Factory => view('test::injection-test'))->middleware(InjectBoost::class);
+
+    $response = $this->get('injection-test');
+
+    $response->assertViewIs('test::injection-test')
+        ->assertSee('browser-logger-active')
+        ->assertSee('Browser logger active (MCP server detected).');
+});
+
+it('does not inject for special response types', function ($responseType, $responseFactory): void {
+    $response = $responseFactory();
+    $result = createMiddlewareResponse($response);
+
+    expect($result)->toBeInstanceOf($responseType);
+})->with([
+    'streamed' => [StreamedResponse::class, fn (): StreamedResponse => new StreamedResponse],
+    'json' => [JsonResponse::class, fn (): JsonResponse => new JsonResponse(['data' => 'test'])],
+    'redirect' => [RedirectResponse::class, fn (): RedirectResponse => new RedirectResponse('http://example.com')],
+    'binary' => [BinaryFileResponse::class, function (): BinaryFileResponse {
+        $tempFile = tempnam(sys_get_temp_dir(), 'test');
+        file_put_contents($tempFile, 'test content');
+
+        return new BinaryFileResponse(new SplFileInfo($tempFile));
+    }],
+]);
+
+it('does not inject into Livewire navigate responses', function (string $headerValue): void {
+    $request = new Request;
+    $request->headers->set('X-Livewire-Navigate', $headerValue);
+
+    $response = new Response('<html><head><title>Test</title></head><body></body></html>', 200, ['Content-Type' => 'text/html']);
+    $result = (new InjectBoost)->handle($request, fn ($req) => $response);
+
+    expect($result->getContent())->not->toContain('browser-logger-active');
+})->with([
+    'Livewire 4 sends 1' => ['1'],
+    'Livewire 3 sends an empty value' => [''],
+]);
+
+it('does not inject when conditions are not met', function ($scenario, $responseFactory, $assertion): void {
+    $response = $responseFactory();
+    $result = createMiddlewareResponse($response);
+
+    $assertion($result);
+})->with([
+    'non-html content type' => [
+        'scenario',
+        fn () => (new Response('test'))->withHeaders(['content-type' => 'application/json']),
+        fn ($result): Expectation => expect($result->getContent())->toBe('test'),
+    ],
+    'missing html skeleton' => [
+        'scenario',
+        fn () => (new Response('test'))->withHeaders(['content-type' => 'text/html']),
+        fn ($result): Expectation => expect($result->getContent())->toBe('test'),
+    ],
+    'already injected' => [
+        'scenario',
+        fn () => (new Response('<html><head><title>Test</title></head><body><div class="browser-logger-active"></div></body></html>'))
+            ->withHeaders(['content-type' => 'text/html']),
+        fn ($result): Expectation => expect($result->getContent())->toContain('browser-logger-active'),
+    ],
+    'partial html fragment with header tag' => [
+        'scenario',
+        fn () => (new Response('<header></header>'))->withHeaders(['content-type' => 'text/html']),
+        fn ($result): Expectation => expect($result->getContent())->toBe('<header></header>'),
+    ],
+]);
+
+it('injects script in html responses', function ($html): void {
+    $response = new Response($html);
+    $response->headers->set('content-type', 'text/html');
+
+    $result = createMiddlewareResponse($response);
+
+    expect($result->getContent())->toContain('<script id="browser-logger-active">');
+})->with([
+    'with head and body tags' => '<html><head><title>Test</title></head><body></body></html>',
+    'without head/body tags' => '<html>Test</html>',
+    'with head tag only' => '<head><title>Test</title></head>',
+]);
+
+it('handles CSP nonce attribute correctly', function ($nonce, $assertions): void {
+    if ($nonce) {
+        Vite::useCspNonce($nonce);
+    }
+
+    Route::get('injection-test', fn (): View|\Heritage\Contracts\View\Factory => view('test::injection-test'))
+        ->middleware(InjectBoost::class);
+
+    $response = $this->get('injection-test')->assertViewIs('test::injection-test');
+
+    $assertions($response);
+})->with([
+    'with CSP nonce configured' => [
+        'test-nonce',
+        fn (TestResponse $response) => $response
+            ->assertSee('nonce="test-nonce"', false)
+            ->assertSee('id="browser-logger-active"', false),
+    ],
+    'without CSP nonce configured' => [
+        null,
+        fn (TestResponse $response) => $response
+            ->assertSee('<script id="browser-logger-active">', false)
+            ->assertDontSee('nonce=', false)
+            ->assertDontSee('test-nonce', false),
+    ],
+]);

@@ -1,0 +1,463 @@
+<?php
+
+declare(strict_types=1);
+
+use Heritage\Filesystem\Filesystem;
+use Heritage\Support\Collection;
+use Heritage\Support\Facades\File;
+use Ugarit\Boost\Install\GuidelineConfig;
+use Ugarit\Boost\Install\Skill;
+use Ugarit\Boost\Install\SkillComposer;
+use Ugarit\Boost\Support\SkillParseFailures;
+use Ugarit\Roster\Package;
+use Ugarit\Roster\PackageCollection;
+use Ugarit\Roster\ProjectManager;
+
+beforeEach(function (): void {
+    $this->project = Mockery::mock(ProjectManager::class);
+
+    $this->app->instance(ProjectManager::class, $this->project);
+    app(SkillParseFailures::class)->flush();
+});
+
+afterEach(function (): void {
+    clearStagedPackages();
+});
+
+test('skills return a collection keyed by skill name', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills)
+        ->toBeInstanceOf(Collection::class)
+        ->and($skills->first())->toBeInstanceOf(Skill::class);
+});
+
+test('skills are discovered from Boost built-in .ai directory', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeTrue();
+});
+
+test('skills only includes skills for installed packages', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeFalse();
+});
+
+test('the cloud skill is only included when the cloud integration is enabled', function (): void {
+    mockProjectPackages($this->project, new PackageCollection([rosterPackage('ugarit/framework', '11.0.0')]));
+
+    $composer = new SkillComposer($this->project);
+
+    expect($composer->skills()->has('deploying-to-cloud'))->toBeFalse();
+
+    $config = new GuidelineConfig;
+    $config->usesCloud = true;
+
+    expect($composer->config($config)->skills()->get('deploying-to-cloud')->package)->toBe('deployments');
+});
+
+test('skill has name, description, path, and package', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skill = (new SkillComposer($this->project))->skills()->get('livewire-development');
+
+    expect($skill)
+        ->name->toBe('livewire-development')
+        ->description->not->toBeEmpty()
+        ->path->toBeDirectory()
+        ->custom->toBeFalse();
+});
+
+test('skills result is cached', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $composer = new SkillComposer($this->project);
+
+    expect($composer->skills())->toBe($composer->skills());
+});
+
+test('config change clears skills cache', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $composer = new SkillComposer($this->project);
+    $first = $composer->skills();
+
+    $composer->config(new GuidelineConfig);
+
+    expect($composer->skills())->not->toBe($first);
+});
+
+test('excludes livewire skills when indirectly required', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(false),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeFalse();
+});
+
+test('excludes skills listed in config exclude list', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    config(['boost.skills.exclude' => ['livewire-development']]);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeFalse();
+});
+
+test('ignores non-existent skill names in exclude list', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    config(['boost.skills.exclude' => ['nonexistent']]);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeTrue();
+});
+
+test('includes livewire skills when directly required', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skills = (new SkillComposer($this->project))->skills();
+
+    expect($skills->has('livewire-development'))->toBeTrue();
+});
+
+test('vendor skills override .ai/ skills with the same name', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $vendorFixture = realpath(\Pest\testDirectory('Fixtures/vendor-skills'));
+    expect($vendorFixture)->not->toBeFalse();
+
+    $composer = Mockery::mock(SkillComposer::class, [$this->project])
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $composer->shouldReceive('resolveFirstPartyBoostPath')
+        ->andReturnUsing(fn (Package $package, string $subpath): ?string => $package->name() === 'livewire/livewire' ? $vendorFixture : null);
+
+    $skills = $composer->skills();
+
+    expect($skills->has('livewire-development'))->toBeTrue()
+        ->and($skills->get('livewire-development')->description)->toBe('Vendor-overridden Livewire skill');
+});
+
+test('falls back to .ai/ skills when vendor has none', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        (rosterPackage('livewire/livewire', '3.0.0'))->setDirect(true),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $composer = Mockery::mock(SkillComposer::class, [$this->project])
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $composer->shouldReceive('resolveFirstPartyBoostPath')->andReturn(null);
+
+    $skills = $composer->skills();
+
+    expect($skills->has('livewire-development'))->toBeTrue();
+});
+
+test('node_modules skills override .ai/ skills for npm first-party packages', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        rosterPackage('@inertiajs/react', '2.1.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $vendorFixture = realpath(\Pest\testDirectory('Fixtures/vendor-skills'));
+    expect($vendorFixture)->not->toBeFalse();
+
+    $composer = Mockery::mock(SkillComposer::class, [$this->project])
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $composer->shouldReceive('resolveFirstPartyBoostPath')
+        ->andReturnUsing(fn (Package $package, string $subpath): ?string => $package->name() === '@inertiajs/react' ? $vendorFixture : null);
+
+    $skills = $composer->skills();
+
+    $npmSkill = $skills->first(fn ($skill): bool => $skill->description === 'Vendor-overridden Livewire skill');
+    expect($npmSkill)->not->toBeNull();
+});
+
+test('falls back to .ai/ skills when node_modules has none for npm package', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        rosterPackage('@inertiajs/react', '2.1.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $composer = Mockery::mock(SkillComposer::class, [$this->project])
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $composer->shouldReceive('resolveFirstPartyBoostPath')->andReturn(null);
+
+    $skills = $composer->skills();
+
+    expect($skills->has('inertia-react-development'))->toBeTrue();
+});
+
+test('returns all third-party skills when aiGuidelines is uninitialized', function (): void {
+    $package = stagedPackage('some/third-party', 'skills');
+    stageSkill($package, 'third-party-skill', 'A vendor-provided skill');
+
+    mockProjectPackages($this->project, new PackageCollection([$package]));
+
+    expect((new SkillComposer($this->project))->skills()->has('third-party-skill'))->toBeTrue();
+});
+
+test('filters third-party skills to matching packages when aiGuidelines is set', function (): void {
+    $package = stagedPackage('some/third-party', 'skills');
+    stageSkill($package, 'third-party-skill', 'A vendor-provided skill');
+
+    mockProjectPackages($this->project, new PackageCollection([$package]));
+
+    $config = new GuidelineConfig;
+    $config->aiGuidelines = ['some/third-party'];
+
+    expect((new SkillComposer($this->project))->config($config)->skills()->has('third-party-skill'))->toBeTrue();
+});
+
+test('excludes third-party skills for packages not in aiGuidelines', function (): void {
+    $package = stagedPackage('some/third-party', 'skills');
+    stageSkill($package, 'third-party-skill', 'A vendor-provided skill');
+
+    mockProjectPackages($this->project, new PackageCollection([$package]));
+
+    $config = new GuidelineConfig;
+    $config->aiGuidelines = ['other/package'];
+
+    expect((new SkillComposer($this->project))->config($config)->skills()->has('third-party-skill'))->toBeFalse();
+});
+
+test('does not parse invalid skills from excluded third-party packages', function (): void {
+    $package = stagedPackage('some/third-party', 'skills');
+    $skillDir = $package->path().'/resources/boost/skills/third-party-skill';
+    File::ensureDirectoryExists($skillDir);
+    File::put($skillDir.'/SKILL.md', fixtureContent('skills/broken-frontmatter/SKILL.md'));
+
+    mockProjectPackages($this->project, new PackageCollection([$package]));
+
+    $config = new GuidelineConfig;
+    $config->aiGuidelines = ['other/package'];
+
+    expect((new SkillComposer($this->project))->config($config)->skills()->has('broken-frontmatter'))->toBeFalse()
+        ->and(app(SkillParseFailures::class)->isEmpty())->toBeTrue();
+});
+
+test('blade skills with code before frontmatter are parsed correctly', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $skillDir = base_path('.ai/skills/blade-frontmatter-test');
+    @mkdir($skillDir, 0755, true);
+
+    file_put_contents($skillDir.'/SKILL.blade.php', <<<'BLADE'
+        @php
+        $dynamicValue = 'dynamic-description';
+        @endphp
+        ---
+        name: blade-frontmatter-test
+        description: This skill has a {{ $dynamicValue }} in the frontmatter
+        ---
+
+        # Test Skill
+
+        This skill tests that blade code before frontmatter is processed correctly.
+        BLADE);
+
+    try {
+        $skills = (new SkillComposer($this->project))->skills();
+
+        expect($skills->has('blade-frontmatter-test'))->toBeTrue()
+            ->and($skills->get('blade-frontmatter-test')->description)
+            ->toBe('This skill has a dynamic-description in the frontmatter');
+    } finally {
+        @unlink($skillDir.'/SKILL.blade.php');
+        @rmdir($skillDir);
+    }
+});
+
+test('frontmatter parsing ignores HTML comments injected by third-party packages', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    mockProjectPackages($this->project, $packages);
+
+    $composer = new SkillComposer($this->project);
+    $method = new ReflectionMethod($composer, 'parseSkillFrontmatter');
+
+    $content = <<<'HTML'
+        <!-- Start blade view: 'storage/framework/views/bf9245cd.blade.php' -->
+        ---
+        name: pest-testing
+        description: "Write and run tests with Pest"
+        ---
+
+        # Content
+        HTML;
+
+    $result = $method->invoke($composer, $content);
+
+    expect($result)
+        ->toHaveKey('name', 'pest-testing')
+        ->toHaveKey('description', 'Write and run tests with Pest');
+});
+
+test('returns third-party npm skills when aiGuidelines is uninitialized', function (): void {
+    $package = stagedPackage('@some-scope/third-party', 'skills');
+    stageSkill($package, 'npm-third-party-skill', 'An npm vendor-provided skill');
+
+    mockProjectPackages($this->project, new PackageCollection([$package]));
+
+    expect((new SkillComposer($this->project))->skills()->has('npm-third-party-skill'))->toBeTrue();
+});
+
+test('first-party npm skills load without the third-party opt-in', function (): void {
+    $firstParty = stagedPackage('@ugarit/some-package', 'skills');
+    stageSkill($firstParty, 'ugarit-skill', 'A first-party skill');
+
+    $thirdParty = stagedPackage('@some-scope/third-party', 'skills');
+    stageSkill($thirdParty, 'npm-third-party-skill', 'An npm vendor-provided skill');
+
+    mockProjectPackages($this->project, new PackageCollection([$firstParty, $thirdParty]));
+
+    $config = new GuidelineConfig;
+    $config->aiGuidelines = [];
+
+    $skills = (new SkillComposer($this->project))->config($config)->skills();
+
+    expect($skills->has('ugarit-skill'))->toBeTrue()
+        ->and($skills->has('npm-third-party-skill'))->toBeFalse();
+});
+
+test('a skill with invalid YAML frontmatter is skipped and records the failure', function (): void {
+    mockProjectPackages($this->project, new PackageCollection([]));
+
+    $skillDir = stageCustomSkill('broken-frontmatter');
+
+    try {
+        $skills = (new SkillComposer($this->project))->skills();
+
+        expect($skills->has('broken-frontmatter'))->toBeFalse()
+            ->and(app(SkillParseFailures::class)->skillNames())->toBe(['broken-frontmatter'])
+            ->and(app(SkillParseFailures::class)->all()[0]['reason'])
+            ->toContain('A colon cannot be used in an unquoted mapping value')
+            ->toContain('description: Does a thing. Covers: the important bit.');
+    } finally {
+        (new Filesystem)->deleteDirectory($skillDir);
+    }
+});
+
+test('a skill with unclosed frontmatter is skipped and records the failure', function (): void {
+    mockProjectPackages($this->project, new PackageCollection([]));
+
+    $skillDir = stageCustomSkill('unclosed-frontmatter');
+
+    try {
+        $skills = (new SkillComposer($this->project))->skills();
+
+        expect($skills->has('unclosed-frontmatter'))->toBeFalse()
+            ->and(app(SkillParseFailures::class)->skillNames())->toBe(['unclosed-frontmatter'])
+            ->and(app(SkillParseFailures::class)->all()[0]['reason'])->toContain('no closing delimiter');
+    } finally {
+        (new Filesystem)->deleteDirectory($skillDir);
+    }
+});
+
+test('a skill whose frontmatter omits the name is skipped and records the failure', function (): void {
+    mockProjectPackages($this->project, new PackageCollection([]));
+
+    $skillDir = stageCustomSkill('incomplete-frontmatter');
+
+    try {
+        $skills = (new SkillComposer($this->project))->skills();
+
+        expect($skills->has('incomplete-frontmatter'))->toBeFalse()
+            ->and(app(SkillParseFailures::class)->skillNames())->toBe(['incomplete-frontmatter'])
+            ->and(app(SkillParseFailures::class)->all()[0]['reason'])->toContain('[name] and [description]');
+    } finally {
+        (new Filesystem)->deleteDirectory($skillDir);
+    }
+});
+
+test('a skill without frontmatter is treated as absent', function (): void {
+    mockProjectPackages($this->project, new PackageCollection([]));
+
+    $skillDir = stageCustomSkill('no-frontmatter');
+
+    try {
+        $skills = (new SkillComposer($this->project))->skills();
+
+        expect($skills->has('no-frontmatter'))->toBeFalse()
+            ->and(app(SkillParseFailures::class)->isEmpty())->toBeTrue();
+    } finally {
+        (new Filesystem)->deleteDirectory($skillDir);
+    }
+});

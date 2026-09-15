@@ -1,0 +1,588 @@
+<?php
+
+declare(strict_types=1);
+
+use Heritage\Console\OutputStyle;
+use Heritage\Filesystem\Filesystem;
+use Heritage\Support\Facades\Scribe;
+use Ugarit\Boost\Console\InstallCommand;
+use Ugarit\Boost\Console\UpdateCommand;
+use Ugarit\Boost\Install\ThirdPartyPackage;
+use Ugarit\Boost\Support\Config;
+use Ugarit\Prompts\Key;
+use Ugarit\Prompts\Prompt;
+use Ugarit\Roster\PackageCollection;
+use Ugarit\Roster\ProjectManager;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
+
+beforeEach(function (): void {
+    (new Config)->flush();
+
+    if (! file_exists(base_path('.ai/guidelines'))) {
+        mkdir(base_path('.ai/guidelines'), 0755, true);
+    }
+});
+
+afterEach(function (): void {
+    (new Config)->flush();
+
+    if (file_exists(base_path('CLAUDE.md'))) {
+        unlink(base_path('CLAUDE.md'));
+    }
+
+    if (is_dir(base_path('.ai/skills'))) {
+        rmdir(base_path('.ai/skills'));
+    }
+});
+
+it('it shows an error when boost.json does not exist', function (): void {
+    $this->scribe('boost:update')
+        ->expectsOutputToContain('Please set up Boost with [php scribe boost:install] first.')
+        ->assertFailed();
+});
+
+it('it shows an error when boost.json contains invalid json', function (): void {
+    file_put_contents(base_path('boost.json'), 'invalid json {{{');
+
+    $this->scribe('boost:update')
+        ->expectsOutputToContain('Please set up Boost with [php scribe boost:install] first.')
+        ->assertFailed();
+});
+
+it('it shows an error when agents are empty', function (): void {
+    $config = new Config;
+    $config->setGuidelines(true);
+
+    $this->scribe('boost:update')
+        ->expectsOutputToContain('Please set up Boost with [php scribe boost:install] first.')
+        ->assertFailed();
+});
+
+it('exits silently when no guidelines and no skills are configured', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(false);
+    $config->setSkills([]);
+
+    $this->scribe('boost:update')
+        ->doesntExpectOutputToContain('Boost guidelines and skills updated successfully.')
+        ->assertSuccessful();
+});
+
+it('exits silently when only mcp is configured and no agents are stored', function (): void {
+    $config = new Config;
+    $config->setMcp(true);
+
+    $this->scribe('boost:update')
+        ->doesntExpectOutputToContain('Please set up Boost with [php scribe boost:install] first.')
+        ->assertSuccessful();
+});
+
+it('calls install command with a guidelines flag when guidelines are enabled', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSkills([]);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('calls install command with skills flag when skills are configured', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(false);
+    $config->setSkills(['test-skill']);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => false,
+            '--skills' => true,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('preserves tracked skills with unusable frontmatter while completing the update', function (string $skill, string $reason): void {
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, new PackageCollection([]));
+    $this->app->instance(ProjectManager::class, $project);
+
+    $skillDir = stageCustomSkill($skill);
+    $agentSkillsPath = '.boost-test-skills-'.uniqid();
+    $installedSkillDir = base_path($agentSkillsPath.'/'.$skill);
+    @mkdir($installedSkillDir, 0755, true);
+    file_put_contents($installedSkillDir.'/SKILL.md', 'previously installed');
+
+    config([
+        'boost.agents.claude_code.skills_path' => $agentSkillsPath,
+        'boost.enforce_tests' => false,
+    ]);
+
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setSkills([$skill]);
+
+    try {
+        expect(Scribe::call('boost:update', ['--no-discover' => true]))->toBe(0)
+            ->and(Scribe::output())
+            ->toContain('Skipped 1 skill with invalid or incomplete frontmatter, leaving existing registration unchanged:')
+            ->toContain('- '.$skill.' (.ai/skills/'.$skill.'/SKILL.md): '.$reason)
+            ->toContain('Boost guidelines and skills updated successfully.');
+
+        expect((new Config)->getSkills())->toContain($skill)
+            ->and($installedSkillDir.'/SKILL.md')->toBeFile()
+            ->and(file_get_contents($installedSkillDir.'/SKILL.md'))->toBe('previously installed');
+    } finally {
+        (new Filesystem)->deleteDirectory(base_path($agentSkillsPath));
+        (new Filesystem)->deleteDirectory($skillDir);
+    }
+})->with([
+    'invalid yaml' => ['broken-frontmatter', 'A colon cannot be used in an unquoted mapping value'],
+    'missing name' => ['incomplete-frontmatter', 'The frontmatter must define both [name] and [description].'],
+]);
+
+it('calls install command with both flags when guidelines and skills are enabled', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSkills(['test-skill']);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => true,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('does not pass mcp flag to install command even when mcp is configured', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setMcp(true);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('preserves sail configuration when updating guidelines', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSail(true);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturnUsing(fn (): int => 0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getSail())->toBeTrue();
+});
+
+it('preserves non-sail configuration when updating guidelines', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSail(false);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getSail())->toBeFalse();
+});
+
+it('preserves sail configuration when updating skills', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setSkills(['commit']);
+    $config->setSail(true);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => false,
+            '--skills' => true,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getSail())->toBeTrue();
+});
+
+it('calls install command with skills flag when .ai/skills directory exists but skills are not in config', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(false);
+
+    mkdir(base_path('.ai/skills'), 0755, true);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => false,
+            '--skills' => true,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('defaults to non-sail when config is missing', function (): void {
+    file_put_contents(base_path('boost.json'), json_encode([
+        'agents' => ['claude_code'],
+        'guidelines' => true,
+    ]));
+
+    $config = new Config;
+
+    // When sail config is missing, it defaults to false
+    expect($config->getSail())->toBeFalse();
+});
+
+it('does not run discovery when --no-discover flag is set', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setSkills(['existing-skill']);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldNotReceive('discoverNewContent');
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => false,
+            '--skills' => true,
+        ])
+        ->andReturn(0);
+    $command->setUgarit($this->app);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getSkills())->toBe(['existing-skill']);
+});
+
+it('runs discovery by default and adds selected new packages to config', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setPackages([]);
+
+    $newPackage = new ThirdPartyPackage('vendor/default-pkg', true, false);
+
+    Prompt::fake([Key::SPACE, Key::ENTER]);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(false);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('resolveNewPackages')
+        ->andReturn(collect(['vendor/default-pkg' => $newPackage]));
+    $command->shouldReceive('callSilently')->andReturn(0);
+    $command->setUgarit($this->app);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+    $command->setInput($input);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getPackages())->toContain('vendor/default-pkg');
+})->skipOnWindows();
+
+it('does not change config when no new packages are found during discovery', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSkills(['existing-skill']);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(false);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('resolveNewPackages')->andReturn(collect());
+    $command->shouldReceive('callSilently')->once()->andReturn(0);
+    $command->setUgarit($this->app);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getSkills())->toBe(['existing-skill'])
+        ->and($config->getPackages())->toBe([]);
+});
+
+it('adds selected new packages to config during discovery', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setPackages([]);
+
+    $newPackage = new ThirdPartyPackage('vendor/awesome-pkg', true, false);
+
+    Prompt::fake([Key::SPACE, Key::ENTER]);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(false);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('resolveNewPackages')
+        ->andReturn(collect(['vendor/awesome-pkg' => $newPackage]));
+    $command->shouldReceive('callSilently')->andReturn(0);
+    $command->setUgarit($this->app);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+    $command->setInput($input);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getPackages())->toContain('vendor/awesome-pkg');
+})->skipOnWindows();
+
+it('skips new-package discovery prompt when running as a composer script', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setPackages([]);
+
+    $newPackage = new ThirdPartyPackage('vendor/awesome-pkg', true, false);
+
+    Prompt::fake([]);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(false);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('resolveNewPackages')->andReturn(collect(['vendor/awesome-pkg' => $newPackage]));
+    $command->shouldReceive('runningAsComposerScript')->andReturn(true);
+    $command->shouldReceive('callSilently')->andReturn(0);
+    $command->setUgarit($this->app);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+    $command->setInput($input);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0)
+        ->and($config->getPackages())->toBe([]);
+})->skipOnWindows();
+
+it('skips skills when --ignore-skills flag is set even if skills are configured', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setSkills(['test-skill']);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(true);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('skips skills when --ignore-skills flag is set even if .ai/skills directory exists', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+
+    mkdir(base_path('.ai/skills'), 0755, true);
+
+    $command = Mockery::mock(UpdateCommand::class)->makePartial();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(true);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(true);
+    $command->shouldReceive('callSilently')
+        ->once()
+        ->with(InstallCommand::class, [
+            '--no-interaction' => true,
+            '--guidelines' => true,
+            '--skills' => false,
+        ])
+        ->andReturn(0);
+
+    $input = new ArrayInput([]);
+    $output = new OutputStyle($input, new BufferedOutput);
+
+    $command->setUgarit($this->app);
+    $command->setOutput($output);
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+});
+
+it('exits silently when --ignore-skills flag is set and no guidelines are configured', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(false);
+    $config->setSkills(['test-skill']);
+
+    $this->scribe('boost:update', ['--ignore-skills' => true])
+        ->doesntExpectOutputToContain('Boost guidelines and skills updated successfully.')
+        ->assertSuccessful();
+});
+
+it('skips new-package discovery prompt when running in non-interactive mode', function (): void {
+    $config = new Config;
+    $config->setAgents(['claude_code']);
+    $config->setGuidelines(true);
+    $config->setPackages([]);
+
+    $newPackage = new ThirdPartyPackage('vendor/awesome-pkg', true, false);
+
+    Prompt::fake([]);
+
+    $command = Mockery::mock(UpdateCommand::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+    $command->shouldReceive('option')->with('no-discover')->andReturn(false);
+    $command->shouldReceive('option')->with('ignore-skills')->andReturn(false);
+    $command->shouldReceive('resolveNewPackages')->andReturn(collect(['vendor/awesome-pkg' => $newPackage]));
+    $command->shouldReceive('callSilently')->andReturn(0);
+
+    $nonInteractiveInput = new ArrayInput([]);
+    $nonInteractiveInput->setInteractive(false);
+
+    $command->setInput($nonInteractiveInput);
+    $command->setUgarit($this->app);
+    $command->setOutput(new OutputStyle($nonInteractiveInput, new NullOutput));
+
+    expect($command->handle($config, app(ProjectManager::class)))->toBe(0);
+
+    expect($config->getPackages())->toBe([]);
+})->skipOnWindows();

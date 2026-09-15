@@ -1,0 +1,310 @@
+<?php
+
+declare(strict_types=1);
+
+use Heritage\Http\Request as HttpRequest;
+use Heritage\Http\Response;
+use Heritage\Support\Facades\Config;
+use Heritage\Support\Facades\File;
+use Heritage\Support\Facades\Log;
+use Heritage\Support\Facades\Route;
+use Ugarit\Boost\Mcp\Tools\BrowserLogs;
+use Ugarit\Boost\Middleware\InjectBoost;
+use Ugarit\Boost\Services\BrowserLogger;
+use Ugarit\Mcp\Request;
+
+function browserLogPath(): string
+{
+    return storage_path('logs'.DIRECTORY_SEPARATOR.'browser.log');
+}
+
+function createBrowserLogFile(string $content): void
+{
+    File::ensureDirectoryExists(dirname(browserLogPath()));
+    File::put(browserLogPath(), $content);
+}
+
+function getBrowserLogContent(): string
+{
+    return File::get(browserLogPath());
+}
+
+beforeEach(function (): void {
+    Log::forgetChannel('browser');
+    File::ensureDirectoryExists(dirname(browserLogPath()));
+
+    if (File::exists(browserLogPath())) {
+        File::delete(browserLogPath());
+    }
+});
+
+afterEach(function (): void {
+    File::delete(File::glob(storage_path('logs'.DIRECTORY_SEPARATOR.'browser-*.log')) ?: []);
+    File::delete(storage_path('logs'.DIRECTORY_SEPARATOR.'frontend.log'));
+    File::delete(storage_path('logs'.DIRECTORY_SEPARATOR.'stacked-browser.log'));
+});
+
+test('it returns log entries when file exists', function (): void {
+    createBrowserLogFile(<<<'LOG'
+[2024-01-15 10:00:00] browser.DEBUG: console log message {"url":"http://example.com","user_agent":"Mozilla/5.0","timestamp":"2024-01-15T10:00:00.000000Z"}
+[2024-01-15 10:01:00] browser.ERROR: JavaScript error occurred {"url":"http://example.com/page","user_agent":"Mozilla/5.0","timestamp":"2024-01-15T10:01:00.000000Z"}
+[2024-01-15 10:02:00] browser.WARNING: Warning message {"url":"http://example.com/other","user_agent":"Mozilla/5.0","timestamp":"2024-01-15T10:02:00.000000Z"}
+LOG);
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 2]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('browser.WARNING: Warning message', 'browser.ERROR: JavaScript error occurred')
+        ->toolTextDoesNotContain('browser.DEBUG: console log message');
+});
+
+test('it reads from a user-defined browser channel path', function (): void {
+    $customLogFile = storage_path('logs'.DIRECTORY_SEPARATOR.'frontend.log');
+
+    Config::set('logging.channels.browser', [
+        'driver' => 'single',
+        'path' => $customLogFile,
+    ]);
+
+    File::put($customLogFile, '[2024-01-15 10:00:00] browser.ERROR: Custom channel error {"url":"http://example.com"}');
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 1]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('browser.ERROR: Custom channel error');
+});
+
+test('it reads from a user-defined browser channel with a daily driver', function (): void {
+    $dailyLogFile = storage_path('logs'.DIRECTORY_SEPARATOR.'browser-'.date('Y-m-d').'.log');
+
+    Config::set('logging.channels.browser', [
+        'driver' => 'daily',
+        'path' => storage_path('logs'.DIRECTORY_SEPARATOR.'browser.log'),
+    ]);
+
+    File::put($dailyLogFile, '[2024-01-15 10:00:00] browser.WARNING: Daily channel warning {"url":"http://example.com"}');
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 1]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('browser.WARNING: Daily channel warning');
+});
+
+test('it reads from a user-defined browser channel using a stack driver', function (): void {
+    $stackedLogFile = storage_path('logs'.DIRECTORY_SEPARATOR.'stacked-browser.log');
+
+    Config::set('logging.channels.browser', [
+        'driver' => 'stack',
+        'channels' => ['browser_file'],
+    ]);
+    Config::set('logging.channels.browser_file', [
+        'driver' => 'single',
+        'path' => $stackedLogFile,
+    ]);
+
+    File::put($stackedLogFile, '[2024-01-15 10:00:00] browser.ERROR: Stacked channel error {"url":"http://example.com"}');
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 1]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('browser.ERROR: Stacked channel error');
+});
+
+test('it reports the resolved path when the browser channel does not write to a file', function (): void {
+    Config::set('logging.channels.browser', ['driver' => 'stderr']);
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 1]));
+
+    expect($response)->isToolResult()
+        ->toolHasError()
+        ->toolTextContains('does not write to a file');
+});
+
+test('it returns error when entries argument is invalid', function (): void {
+    $tool = new BrowserLogs;
+
+    $response = $tool->handle(new Request(['entries' => 0]));
+    expect($response)->isToolResult()
+        ->toolHasError()
+        ->toolTextContains('The "entries" argument must be greater than 0.');
+
+    $response = $tool->handle(new Request(['entries' => -5]));
+    expect($response)->isToolResult()
+        ->toolHasError()
+        ->toolTextContains('The "entries" argument must be greater than 0.');
+});
+
+test('it returns error when a log file does not exist', function (): void {
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 10]));
+
+    expect($response)->isToolResult()
+        ->toolHasError()
+        ->toolTextContains('No log file found at');
+});
+
+test('it returns error when log file is empty', function (): void {
+    createBrowserLogFile('');
+
+    $tool = new BrowserLogs;
+    $response = $tool->handle(new Request(['entries' => 5]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('Unable to retrieve log entries, or no logs');
+});
+
+test('browser logger script contains required functionality', function (): void {
+    Route::post('/_boost/browser-logs', fn (): null => null)->name('boost.browser-logs');
+
+    expect(BrowserLogger::getScript())->toContain(
+        'browser-logger-active',
+        '/_boost/browser-logs',
+        'console.log',
+        'console.debug',
+        'console.error',
+        'window.onerror'
+    );
+});
+
+test('browser logger script never hands a raw logged value to JSON.stringify', function (): void {
+    expect(BrowserLogger::getScript())
+        ->toContain('function toSafeValue(')
+        ->toContain('toSafeValue(event.reason, new WeakSet())')
+        ->not->toContain('JSON.stringify(obj,');
+});
+
+test('browser logger script captures the configured log levels', function (?array $configuredLevels, array $capturedTypes): void {
+    config(['boost.browser_log_levels' => $configuredLevels]);
+
+    expect(BrowserLogger::getScript())->toContain('const captureTypes = '.json_encode($capturedTypes).';');
+})->with([
+    'error' => [['error'], ['error']],
+    'warning' => [['warning'], ['warning', 'error']],
+    'info' => [['info'], ['info', 'warning', 'error']],
+    'debug' => [['debug'], ['log', 'debug', 'info', 'warning', 'error', 'table']],
+    'warn alias' => [['warn'], ['warning', 'error']],
+    'missing configuration' => [null, ['log', 'debug', 'info', 'warning', 'error', 'table']],
+    'empty configuration' => [[], ['log', 'debug', 'info', 'warning', 'error', 'table']],
+    'blank env var' => [[''], ['log', 'debug', 'info', 'warning', 'error', 'table']],
+    'whitespace only' => [['   '], ['log', 'debug', 'info', 'warning', 'error', 'table']],
+    'blank entries alongside a level' => [['', 'error'], ['error']],
+]);
+
+test('browser logs endpoint processes logs correctly', function (): void {
+    $response = $this->postJson('/_boost/browser-logs', [
+        'logs' => [
+            [
+                'type' => 'log',
+                'timestamp' => '2024-01-15T10:00:00.000Z',
+                'data' => ['Test message'],
+                'url' => 'http://example.com',
+                'userAgent' => 'Mozilla/5.0',
+            ],
+            [
+                'type' => 'error',
+                'timestamp' => '2024-01-15T10:01:00.000Z',
+                'data' => ['Error occurred'],
+                'url' => 'http://example.com/error',
+                'userAgent' => 'Chrome/96',
+            ],
+        ],
+    ]);
+
+    $response->assertOk();
+    $response->assertJson(['status' => 'logged']);
+
+    expect(browserLogPath())->toBeFile()
+        ->and(getBrowserLogContent())
+        ->toContain('DEBUG: Test message')
+        ->toContain('ERROR: Error occurred')
+        ->toContain('http://example.com')
+        ->toContain('Mozilla/5.0');
+});
+
+test('InjectBoost middleware injects script into HTML response', function (): void {
+    $html = <<<'HTML'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+</body>
+</html>
+HTML;
+
+    $request = HttpRequest::create('/');
+    $response = new Response($html, 200, ['Content-Type' => 'text/html']);
+
+    $result = (new InjectBoost)->handle($request, fn ($req): Response => $response);
+
+    expect($result->getContent())
+        ->toContain('browser-logger-active')
+        ->toContain('</head>')
+        ->and(substr_count($result->getContent(), 'browser-logger-active'))->toBe(1);
+});
+
+test('InjectBoost middleware does not inject into non-HTML responses', function (): void {
+    $json = json_encode(['status' => 'ok']);
+    $request = HttpRequest::create('/');
+    $response = new Response($json);
+
+    $result = (new InjectBoost)->handle($request, fn ($req): Response => $response);
+
+    expect($result->getContent())
+        ->toBe($json)
+        ->not->toContain('browser-logger-active');
+});
+
+test('InjectBoost middleware does not inject script twice', function (): void {
+    $html = <<<'HTML'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+    <script id="browser-logger-active">// Already injected</script>
+</head>
+<body>
+    <h1>Hello World</h1>
+</body>
+</html>
+HTML;
+
+    $request = HttpRequest::create('/');
+    $response = new Response($html);
+
+    $result = (new InjectBoost)->handle($request, fn ($req): Response => $response);
+
+    expect(substr_count($result->getContent(), 'browser-logger-active'))->toBe(1);
+});
+
+test('InjectBoost middleware injects before body tag when no head tag', function (): void {
+    $html = <<<'HTML'
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Hello World</h1>
+</body>
+</html>
+HTML;
+
+    $request = HttpRequest::create('/');
+    $response = new Response($html, 200, ['Content-Type' => 'text/html']);
+
+    $result = (new InjectBoost)->handle($request, fn ($req): Response => $response);
+
+    expect($result->getContent())
+        ->toContain('browser-logger-active')
+        ->toMatch('/<script[^>]*browser-logger-active[^>]*>.*<\/script>\s*<\/body>/s');
+});

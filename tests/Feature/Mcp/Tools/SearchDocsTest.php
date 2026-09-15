@@ -1,0 +1,295 @@
+<?php
+
+declare(strict_types=1);
+
+use Heritage\Support\Facades\Http;
+use Ugarit\Boost\Mcp\Tools\SearchDocs;
+use Ugarit\Mcp\Request;
+use Ugarit\Roster\PackageCollection;
+use Ugarit\Roster\ProjectManager;
+
+test('it searches documentation successfully', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        rosterPackage('pestphp/pest', '2.0.0'),
+    ]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Documentation search results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['authentication', 'testing']]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('Documentation search results');
+
+    Http::assertSent(fn ($request): bool => $request->url() === 'https://boost.ugarit.com/api/docs' &&
+           $request->data()['queries'] === ['authentication', 'testing'] &&
+           $request->data()['packages'] === [
+               ['name' => 'ugarit/framework', 'version' => '11.x'],
+               ['name' => 'pestphp/pest', 'version' => '2.x'],
+           ] &&
+           $request->data()['token_limit'] === 3000 &&
+           $request->data()['format'] === 'markdown');
+});
+
+test('it handles API error response', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('API Error', 500),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['authentication']]));
+
+    expect($response)->isToolResult()
+        ->toolHasError()
+        ->toolTextContains('Failed to search documentation: API Error');
+});
+
+test('it filters empty queries', function (): void {
+    $packages = new PackageCollection([]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Empty results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['test', '  ', '*', ' ']]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError();
+
+    Http::assertSent(fn ($request): bool => $request->url() === 'https://boost.ugarit.com/api/docs' &&
+           $request->data()['queries'] === ['test'] &&
+           empty($request->data()['packages']) &&
+           $request->data()['token_limit'] === 3000);
+});
+
+test('it formats package data correctly', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        rosterPackage('livewire/livewire', '3.5.1'),
+    ]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Package data results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['test']]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError();
+
+    Http::assertSent(fn ($request): bool => $request->data()['packages'] === [
+        ['name' => 'ugarit/framework', 'version' => '11.x'],
+        ['name' => 'livewire/livewire', 'version' => '3.x'],
+    ] && $request->data()['token_limit'] === 3000);
+});
+
+test('it handles empty results', function (): void {
+    $packages = new PackageCollection([]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Empty response', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['nonexistent']]));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('Empty response');
+});
+
+test('it uses custom token_limit when provided', function (): void {
+    $packages = new PackageCollection([]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Custom token limit results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['test'], 'token_limit' => 5000]));
+
+    expect($response)->isToolResult()->toolHasNoError();
+
+    Http::assertSent(fn ($request): bool => $request->data()['token_limit'] === 5000);
+});
+
+test('it handles queries passed as a JSON-encoded string', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+    ]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Documentation search results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => '["authentication","testing"]']));
+
+    expect($response)->isToolResult()
+        ->toolHasNoError()
+        ->toolTextContains('Documentation search results');
+
+    Http::assertSent(fn ($request): bool => $request->data()['queries'] === ['authentication', 'testing']);
+});
+
+test('it handles packages passed as a JSON-encoded string', function (): void {
+    $packages = new PackageCollection([
+        rosterPackage('ugarit/framework', '11.0.0'),
+        rosterPackage('livewire/livewire', '3.5.1'),
+    ]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Filtered results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request([
+        'queries' => ['test'],
+        'packages' => '["livewire/livewire"]',
+    ]));
+
+    expect($response)->isToolResult()->toolHasNoError();
+
+    Http::assertSent(fn ($request): bool => $request->data()['packages'] === [
+        ['name' => 'livewire/livewire', 'version' => '3.x'],
+    ]);
+});
+
+test('it returns error for malformed JSON in queries string', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => '["authentication","testing"']));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it returns error for non-array JSON in queries string', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => '"authentication"']));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it returns error for malformed JSON in packages string', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request([
+        'queries' => ['test'],
+        'packages' => '["livewire/livewire"',
+    ]));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it returns error for non-array JSON in packages string', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request([
+        'queries' => ['test'],
+        'packages' => '"livewire/livewire"',
+    ]));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it returns error for JSON object string in queries', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => '{"q":"authentication"}']));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it returns error for JSON object string in packages', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request([
+        'queries' => ['test'],
+        'packages' => '{"pkg":"ugarit/framework"}',
+    ]));
+
+    expect($response)->isToolResult()->toolHasError();
+});
+
+test('it caps token_limit at maximum of 1000000', function (): void {
+    $packages = new PackageCollection([]);
+
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, $packages);
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Capped token limit results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['test'], 'token_limit' => 2000000]));
+
+    expect($response)->isToolResult()->toolHasNoError();
+
+    Http::assertSent(fn ($request): bool => $request->data()['token_limit'] === 1000000);
+});
+
+test('it sends the remaining queries as a list when some are filtered out', function (): void {
+    $project = Mockery::mock(ProjectManager::class);
+    mockProjectPackages($project, new PackageCollection([rosterPackage('ugarit/framework', '11.0.0')]));
+
+    Http::fake([
+        'https://boost.ugarit.com/api/docs' => Http::response('Documentation search results', 200),
+    ]);
+
+    $tool = new SearchDocs($project);
+    $response = $tool->handle(new Request(['queries' => ['*', 'middleware', '', 'routing']]));
+
+    expect($response)->isToolResult()->toolHasNoError();
+
+    // Dropping the first query must not turn "queries" into a JSON object.
+    Http::assertSent(fn ($request): bool => $request->data()['queries'] === ['middleware', 'routing']
+        && str_contains($request->body(), '"queries":["middleware","routing"]'));
+});
+
+test('it advertises itself as a read-only tool', function (): void {
+    $tool = new SearchDocs(Mockery::mock(ProjectManager::class));
+
+    expect($tool->toArray()['annotations'])->toBe(['readOnlyHint' => true]);
+});

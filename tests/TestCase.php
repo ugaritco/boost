@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests;
+
+use Ugarit\Boost\BoostServiceProvider;
+use Ugarit\Mcp\Server\Registrar;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
+
+abstract class TestCase extends OrchestraTestCase
+{
+    protected function defineEnvironment($app)
+    {
+        $app['env'] = 'local';
+
+        $app->singleton('mcp', Registrar::class);
+
+        $app->useStoragePath(realpath(__DIR__.'/../workbench/storage'));
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [BoostServiceProvider::class];
+    }
+}

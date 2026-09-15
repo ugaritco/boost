@@ -1,0 +1,1547 @@
+# Release Notes
+
+## [Unreleased](https://github.com/ugarit/boost/compare/v2.9.0...main)
+
+## [v2.9.0](https://github.com/ugarit/boost/compare/v2.8.1...v2.9.0) - 2026-09-14
+
+### What's Changed
+
+* Bump the github-actions group with 2 updates by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/1020
+* Point the skill sync workflow at the renamed deploying-to-cloud folder in cloud-cli by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/1021
+* Support ugarit/mcp 1.x by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/1028
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.8.1...v2.9.0
+
+## [v2.8.1](https://github.com/ugarit/boost/compare/v2.8.0...v2.8.1) - 2026-09-10
+
+### What's Changed
+
+* Run test workflows on pushes to main by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1013
+* feat: support third-party NPM package guidelines and skills by [@calebdw](https://github.com/calebdw) in https://github.com/ugarit/boost/pull/935
+* Reject backslash paths when downloading a skill so files cannot land outside the skill directory by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/963
+* Ignore commented-out entries when checking for existing MCP servers by [@lazerg](https://github.com/lazerg) in https://github.com/ugarit/boost/pull/933
+* Treat a whitespace-only MCP config file as new instead of failing the install by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/1018
+* Resolve the browser log path from the browser channel config instead of a hardcoded location by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/1017
+* Preserve SQL literals when applying table prefixes by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1014
+* Record rules only when the user asks for them by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/1019
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.8.0...v2.8.1
+
+## [v2.8.0](https://github.com/ugarit/boost/compare/v2.7.1...v2.8.0) - 2026-09-08
+
+### What's Changed
+
+* Remove redundant test lifecycle overrides by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1004
+* Leave fenced code blocks alone when spacing markdown headings by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/961
+* Throw on invalid SKILL.md frontmatter instead of silently unregistering the skill by [@shoemoney](https://github.com/shoemoney) in https://github.com/ugarit/boost/pull/965
+* Show repo-relative skill paths with forward slashes on Windows by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/1011
+* Stop normalizing blank lines outside the Boost guidelines block by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/996
+* Use installed PHPUnit version in testing skill docs by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1008
+* Fix entity decoding in fenced code blocks by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/997
+* Fix: browser-logs watcher can crash any Livewire page via JSON.stringify auto-invoking $wire's fake toJSON by [@thealejandro](https://github.com/thealejandro) in https://github.com/ugarit/boost/pull/1007
+* Drop the truncated leading fragment when the log chunk boundary lands inside an entry by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/1009
+* Bundle the Ugarit Cloud skill and sync it nightly from cloud-cli by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/1012
+* Key nested user guidelines by relative path so same-named files stop overwriting each other by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/1010
+
+### New Contributors
+
+* [@shoemoney](https://github.com/shoemoney) made their first contribution in https://github.com/ugarit/boost/pull/965
+* [@thealejandro](https://github.com/thealejandro) made their first contribution in https://github.com/ugarit/boost/pull/1007
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.7.1...v2.8.0
+
+## [v2.7.1](https://github.com/ugarit/boost/compare/v2.7.0...v2.7.1) - 2026-09-07
+
+### What's Changed
+
+* Detect Livewire navigate requests by header presence since Livewire 3 sends an empty value by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/984
+* Ensure MCP config files end with a trailing newline by [@iitenkida7](https://github.com/iitenkida7) in https://github.com/ugarit/boost/pull/990
+* Skip versioned guideline discovery for packages without a major version by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/988
+* Join TABLE_CONSTRAINTS for check constraints since MySQL's CHECK_CONSTRAINTS table has no TABLE_NAME column by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/980
+* Fix non-GitHub SSH remote validation by [@simonyang08](https://github.com/simonyang08) in https://github.com/ugarit/boost/pull/986
+* Register the browser-logs route only when the browser logs watcher is enabled by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/993
+* Report the database driver name as database_engine instead of the connection name by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/994
+* Read the standard mcp_config_path config key for Junie instead of the never-documented mcp_path by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/995
+* Declare search-docs read-only so agents in plan mode stop re-asking for it by [@humanik](https://github.com/humanik) in https://github.com/ugarit/boost/pull/998
+* Align action examples to use handle() by [@bjoernzosel](https://github.com/bjoernzosel) in https://github.com/ugarit/boost/pull/999
+* Remove deprecated Rector skips by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1000
+* Use unlimited memory for PHPStan type checks by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1003
+* Remove deprecated early return Rector set by [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) in https://github.com/ugarit/boost/pull/1002
+
+### New Contributors
+
+* [@iitenkida7](https://github.com/iitenkida7) made their first contribution in https://github.com/ugarit/boost/pull/990
+* [@simonyang08](https://github.com/simonyang08) made their first contribution in https://github.com/ugarit/boost/pull/986
+* [@humanik](https://github.com/humanik) made their first contribution in https://github.com/ugarit/boost/pull/998
+* [@bjoernzosel](https://github.com/bjoernzosel) made their first contribution in https://github.com/ugarit/boost/pull/999
+* [@Mohammad-Ranjbar](https://github.com/Mohammad-Ranjbar) made their first contribution in https://github.com/ugarit/boost/pull/1000
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.7.0...v2.7.1
+
+## [v2.7.0](https://github.com/ugarit/boost/compare/v2.6.0...v2.7.0) - 2026-08-26
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.6.0...v2.7.0
+
+## [v2.6.0](https://github.com/ugarit/boost/compare/v2.5.5...v2.6.0) - 2026-08-25
+
+* Run `DatabaseQuery` under a guaranteed database enforced read-only transaction by [@crynobone](https://github.com/crynobone) in https://github.com/ugarit/boost/pull/957
+* Quote the MySQL table type as a string literal so schema reads work under ANSI_QUOTES by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/958
+* Point the last-error tool description at the correct browser-logs tool name by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/959
+* Ignore a repository-root SKILL.md so add-skill cannot delete the whole skills directory by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/954
+* Accept any skill path shape in boost:add-skill, and keep the audit gate correct by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/960
+* Keep the separating comma out of trailing comments when injecting MCP servers by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/977
+* Stop detecting Antigravity from the shared .agents directory that Boost itself creates for other agents' skills by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/981
+* Re-key the search-docs query list after filtering by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/962
+* Testing Best Practices Skill by [@nexxai](https://github.com/nexxai) in https://github.com/ugarit/boost/pull/769
+
+## [v2.5.5](https://github.com/ugarit/boost/compare/v2.5.4...v2.5.5) - 2026-08-19
+
+### What's Changed
+
+* Correct the Wayfinder query parameter return value by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/950
+* Add the missing PHP opening tag to the Volt class-based example by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/951
+* Point the Livewire 4 stream migration at the correct parameter by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/949
+* chore: allow guzzle v8 by [@joostdebruijn](https://github.com/joostdebruijn) in https://github.com/ugarit/boost/pull/956
+* Fix newline normalization corrupting multi-byte UTF-8 in rule files by [@nixprosoft](https://github.com/nixprosoft) in https://github.com/ugarit/boost/pull/947
+
+### New Contributors
+
+* [@joostdebruijn](https://github.com/joostdebruijn) made their first contribution in https://github.com/ugarit/boost/pull/956
+* [@nixprosoft](https://github.com/nixprosoft) made their first contribution in https://github.com/ugarit/boost/pull/947
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.5.4...v2.5.5
+
+## [v2.5.4](https://github.com/ugarit/boost/compare/v2.5.3...v2.5.4) - 2026-08-18
+
+### What's Changed
+
+* Wrap lockForUpdate example in a transaction by [@ulofiai](https://github.com/ulofiai) in https://github.com/ugarit/boost/pull/918
+* Prevent `boost:update` from failing when there is nothing to update by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/907
+* Handle signaled process when detecting test enforcement by [@lazerg](https://github.com/lazerg) in https://github.com/ugarit/boost/pull/901
+* Reject Blade templates from remote skills by [@drewmt](https://github.com/drewmt) in https://github.com/ugarit/boost/pull/914
+* Improve argument decoding error handling in ExecuteToolCommand by [@AmadulHaque](https://github.com/AmadulHaque) in https://github.com/ugarit/boost/pull/896
+* feat(agents): add MCP configuration support to Antigravity by [@imKenjo18](https://github.com/imKenjo18) in https://github.com/ugarit/boost/pull/869
+* Refine search-docs usage guidance by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/923
+* Correct the mimes and extensions guidance for file upload validation by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/928
+* Include `PATCH` in the CSRF rule by [@MartinCamen](https://github.com/MartinCamen) in https://github.com/ugarit/boost/pull/934
+* Fix the JavaScript hook example in the Livewire 3 skill by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/927
+* Send an idempotency key in the retried charge example by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/938
+* Treat blank executable path config values as unset by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/937
+* Ignore the connection table prefix when reading table details by [@lazerg](https://github.com/lazerg) in https://github.com/ugarit/boost/pull/922
+* Fix the foreign key index example so it actually creates an index by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/942
+* Correct the wire:model default in the Livewire 4 skill by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/943
+* Describe what LazilyRefreshDatabase actually defers by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/944
+* Correct the cache tag driver support list by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/941
+
+### New Contributors
+
+* [@ulofiai](https://github.com/ulofiai) made their first contribution in https://github.com/ugarit/boost/pull/918
+* [@drewmt](https://github.com/drewmt) made their first contribution in https://github.com/ugarit/boost/pull/914
+* [@AmadulHaque](https://github.com/AmadulHaque) made their first contribution in https://github.com/ugarit/boost/pull/896
+* [@MartinCamen](https://github.com/MartinCamen) made their first contribution in https://github.com/ugarit/boost/pull/934
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.5.3...v2.5.4
+
+## [v2.5.3](https://github.com/ugarit/boost/compare/v2.5.1...v2.5.3) - 2026-08-07
+
+### What's Changed
+
+* Skip package discovery prompt when run via composer script by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/921
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.5.2...v2.5.3
+
+## [v2.5.1](https://github.com/ugarit/boost/compare/v2.5.0...v2.5.1) - 2026-08-05
+
+### What's Changed
+
+* Sort agent list alphabetically by [@michaelr0](https://github.com/michaelr0) in https://github.com/ugarit/boost/pull/898
+* Fix read-only bypass in `DatabaseQuery` via CTE bodies, `EXPLAIN ANALYZE`, and `INTO` by [@ademola-emmanuel](https://github.com/ademola-emmanuel) in https://github.com/ugarit/boost/pull/894
+* Correct the Inertia CSRF guidance in the best practices skill by [@lazerg](https://github.com/lazerg) in https://github.com/ugarit/boost/pull/913
+* Add missing existing keys to config file by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/910
+
+### New Contributors
+
+* [@michaelr0](https://github.com/michaelr0) made their first contribution in https://github.com/ugarit/boost/pull/898
+* [@ademola-emmanuel](https://github.com/ademola-emmanuel) made their first contribution in https://github.com/ugarit/boost/pull/894
+* [@lazerg](https://github.com/lazerg) made their first contribution in https://github.com/ugarit/boost/pull/913
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.5.0...v2.5.1
+
+## [v2.5.0](https://github.com/ugarit/boost/compare/v2.4.13...v2.5.0) - 2026-08-04
+
+### What's Changed
+
+* [2.x] Update .gitattributes export ignore entries by [@jackbayliss](https://github.com/jackbayliss) in https://github.com/ugarit/boost/pull/886
+* Make third-party guideline discovery the default in boost:update by [@paulinevos](https://github.com/paulinevos) in https://github.com/ugarit/boost/pull/882
+* Bump actions/checkout from 7.0.0 to 7.0.1 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/890
+* Journal and Infer Conventions by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/891
+* Refactor scope methods to use #[Scope] attribute by [@mathcrln](https://github.com/mathcrln) in https://github.com/ugarit/boost/pull/902
+* Only offer the Ugarit Cloud integration when skills are being installed by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/909
+* Skip vendor guidelines that fail to render instead of crashing by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/911
+
+### New Contributors
+
+* [@jackbayliss](https://github.com/jackbayliss) made their first contribution in https://github.com/ugarit/boost/pull/886
+* [@paulinevos](https://github.com/paulinevos) made their first contribution in https://github.com/ugarit/boost/pull/882
+* [@mathcrln](https://github.com/mathcrln) made their first contribution in https://github.com/ugarit/boost/pull/902
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.13...v2.5.0
+
+**Upgrade guide:** : https://github.com/ugarit/boost/blob/main/UPGRADE.md
+
+## [v2.4.13](https://github.com/ugarit/boost/compare/v2.4.12...v2.4.13) - 2026-07-17
+
+### What's Changed
+
+* feat: add Grok Build agent support by [@csfh](https://github.com/csfh) in https://github.com/ugarit/boost/pull/877
+* feat: add configurable browser log levels by [@JaiveerChavda](https://github.com/JaiveerChavda) in https://github.com/ugarit/boost/pull/875
+* Prevent script injection into partial HTML responses by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/880
+* Add support for ugarit/mcp ^0.9.0 by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/884
+
+### New Contributors
+
+* [@csfh](https://github.com/csfh) made their first contribution in https://github.com/ugarit/boost/pull/877
+* [@JaiveerChavda](https://github.com/JaiveerChavda) made their first contribution in https://github.com/ugarit/boost/pull/875
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.12...v2.4.13
+
+## [v2.4.12](https://github.com/ugarit/boost/compare/v2.4.11...v2.4.12) - 2026-07-08
+
+### What's Changed
+
+* Add committed project rules with a record-rule MCP tool by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/852
+* fix: prefer opencode.jsonc when updating existing configuration by [@alaminfirdows](https://github.com/alaminfirdows) in https://github.com/ugarit/boost/pull/862
+* fix: unterminated single quote string by [@maiobarbero](https://github.com/maiobarbero) in https://github.com/ugarit/boost/pull/866
+* Make enum guideline generation deterministic by [@hosmelq](https://github.com/hosmelq) in https://github.com/ugarit/boost/pull/870
+* Fix table-prefix corrupting "ORDER BY … DESC" and schema-qualified queries by [@matthewjohns0n](https://github.com/matthewjohns0n) in https://github.com/ugarit/boost/pull/868
+* Restructure ugarit-best-practices skill into a compact rule index by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/871
+
+### New Contributors
+
+* [@alaminfirdows](https://github.com/alaminfirdows) made their first contribution in https://github.com/ugarit/boost/pull/862
+* [@maiobarbero](https://github.com/maiobarbero) made their first contribution in https://github.com/ugarit/boost/pull/866
+* [@matthewjohns0n](https://github.com/matthewjohns0n) made their first contribution in https://github.com/ugarit/boost/pull/868
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.11...v2.4.12
+
+## [v2.4.11](https://github.com/ugarit/boost/compare/v.2.4.11...v2.4.11) - 2026-06-26
+
+### What's Changed
+
+* Bump actions/checkout from 6.0.2 to 6.0.3 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/848
+* Add MCP server icon metadata by [@sneycampos](https://github.com/sneycampos) in https://github.com/ugarit/boost/pull/849
+* Remove circular MCP server icon test by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/853
+* feat(pint): add --dirty flag for faster formatting by [@calebdw](https://github.com/calebdw) in https://github.com/ugarit/boost/pull/845
+* fix: guard non-interactive mode in selectThirdPartyPackages and selectIntegrations by [@impruthvi](https://github.com/impruthvi) in https://github.com/ugarit/boost/pull/839
+* Bump shivammathur/setup-php from 2.37.1 to 2.37.2 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/854
+* docs: use handle() in action class example instead of execute by [@3bd-ulrahman](https://github.com/3bd-ulrahman) in https://github.com/ugarit/boost/pull/858
+* Bump actions/checkout from 6.0.3 to 7.0.0 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/860
+* fix: make MCP tool timeout configurable by [@jstar0](https://github.com/jstar0) in https://github.com/ugarit/boost/pull/856
+* feat: add Pi agent support by [@cyrodjohn](https://github.com/cyrodjohn) in https://github.com/ugarit/boost/pull/841
+* Testing with interactive ptys by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/859
+
+### New Contributors
+
+* [@sneycampos](https://github.com/sneycampos) made their first contribution in https://github.com/ugarit/boost/pull/849
+* [@3bd-ulrahman](https://github.com/3bd-ulrahman) made their first contribution in https://github.com/ugarit/boost/pull/858
+* [@jstar0](https://github.com/jstar0) made their first contribution in https://github.com/ugarit/boost/pull/856
+* [@cyrodjohn](https://github.com/cyrodjohn) made their first contribution in https://github.com/ugarit/boost/pull/841
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.10...v2.4.11
+
+## [v.2.4.11](https://github.com/ugarit/boost/compare/v2.4.10...v.2.4.11) - 2026-06-26
+
+### What's Changed
+
+* Bump actions/checkout from 6.0.2 to 6.0.3 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/848
+* Add MCP server icon metadata by [@sneycampos](https://github.com/sneycampos) in https://github.com/ugarit/boost/pull/849
+* Remove circular MCP server icon test by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/853
+* feat(pint): add --dirty flag for faster formatting by [@calebdw](https://github.com/calebdw) in https://github.com/ugarit/boost/pull/845
+* fix: guard non-interactive mode in selectThirdPartyPackages and selectIntegrations by [@impruthvi](https://github.com/impruthvi) in https://github.com/ugarit/boost/pull/839
+* Bump shivammathur/setup-php from 2.37.1 to 2.37.2 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/854
+* docs: use handle() in action class example instead of execute by [@3bd-ulrahman](https://github.com/3bd-ulrahman) in https://github.com/ugarit/boost/pull/858
+* Bump actions/checkout from 6.0.3 to 7.0.0 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/860
+* fix: make MCP tool timeout configurable by [@jstar0](https://github.com/jstar0) in https://github.com/ugarit/boost/pull/856
+* feat: add Pi agent support by [@cyrodjohn](https://github.com/cyrodjohn) in https://github.com/ugarit/boost/pull/841
+* Testing with interactive ptys by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/859
+
+### New Contributors
+
+* [@sneycampos](https://github.com/sneycampos) made their first contribution in https://github.com/ugarit/boost/pull/849
+* [@3bd-ulrahman](https://github.com/3bd-ulrahman) made their first contribution in https://github.com/ugarit/boost/pull/858
+* [@jstar0](https://github.com/jstar0) made their first contribution in https://github.com/ugarit/boost/pull/856
+* [@cyrodjohn](https://github.com/cyrodjohn) made their first contribution in https://github.com/ugarit/boost/pull/841
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.10...v.2.4.11
+
+## [v2.4.10](https://github.com/ugarit/boost/compare/v2.4.9...v2.4.10) - 2026-06-09
+
+### What's Changed
+
+* fix: preserve literal $N patterns when replacing guidelines block by [@impruthvi](https://github.com/impruthvi) in https://github.com/ugarit/boost/pull/840
+* Fix Zed detection when the binary is `zeditor` by [@PHLAK](https://github.com/PHLAK) in https://github.com/ugarit/boost/pull/846
+* Support ugarit/mcp 0.8.0 by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/847
+
+### New Contributors
+
+* [@PHLAK](https://github.com/PHLAK) made their first contribution in https://github.com/ugarit/boost/pull/846
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.9...v2.4.10
+
+## [v2.4.9](https://github.com/ugarit/boost/compare/v2.4.8...v2.4.9) - 2026-06-04
+
+### What's Changed
+
+* Adopt ugarit/mcp 0.7.1 namespace renames by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/816
+* feat: adds Google Antigravity agent by [@achyutkneupane](https://github.com/achyutkneupane) in https://github.com/ugarit/boost/pull/818
+* Add Antigravity agent to AgentsDetectorTest by [@imKenjo18](https://github.com/imKenjo18) in https://github.com/ugarit/boost/pull/820
+* Fix Inertia v3 layout props API name in upgrade prompt by [@TTezcan](https://github.com/TTezcan) in https://github.com/ugarit/boost/pull/823
+* Add Factory Droid agent by [@travisobregon](https://github.com/travisobregon) in https://github.com/ugarit/boost/pull/828
+* fix: detect all common Docker Compose filenames in Sail check by [@MreeP](https://github.com/MreeP) in https://github.com/ugarit/boost/pull/827
+* Remove Gemini CLI agent in favor of Antigravity by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/819
+* Add Dependabot cooldown of 5 days by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/834
+* Enable Dependabot auto-merge by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/836
+* fix: remove AGENTS.md from Codex project detection by [@impruthvi](https://github.com/impruthvi) in https://github.com/ugarit/boost/pull/832
+* fix: remove AGENTS.md from OpenCode project detection by [@impruthvi](https://github.com/impruthvi) in https://github.com/ugarit/boost/pull/831
+* Add Zed editor agent by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/830
+
+### New Contributors
+
+* [@achyutkneupane](https://github.com/achyutkneupane) made their first contribution in https://github.com/ugarit/boost/pull/818
+* [@imKenjo18](https://github.com/imKenjo18) made their first contribution in https://github.com/ugarit/boost/pull/820
+* [@TTezcan](https://github.com/TTezcan) made their first contribution in https://github.com/ugarit/boost/pull/823
+* [@travisobregon](https://github.com/travisobregon) made their first contribution in https://github.com/ugarit/boost/pull/828
+* [@MreeP](https://github.com/MreeP) made their first contribution in https://github.com/ugarit/boost/pull/827
+* [@impruthvi](https://github.com/impruthvi) made their first contribution in https://github.com/ugarit/boost/pull/832
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.8...v2.4.9
+
+## [v2.4.8](https://github.com/ugarit/boost/compare/v2.4.7...v2.4.8) - 2026-05-19
+
+### What's Changed
+
+* Pin ugarit/mcp below 0.7.1 to avoid breaking namespace renames by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/815
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.7...v2.4.8
+
+## [v2.4.7](https://github.com/ugarit/boost/compare/v2.4.6...v2.4.7) - 2026-05-18
+
+### What's Changed
+
+* fix: minor typo and comment improvements in ApplicationInfo and Boost by [@iz-ahmad](https://github.com/iz-ahmad) in https://github.com/ugarit/boost/pull/792
+* Fix TypeError in RendersBladeGuidelines when Blade::render returns an HtmlString by [@dipaksarkar](https://github.com/dipaksarkar) in https://github.com/ugarit/boost/pull/796
+* Fix path separators and trailing newlines in install output by [@barrytarter](https://github.com/barrytarter) in https://github.com/ugarit/boost/pull/790
+* Remove redundant guidance to read .env directly by [@loadinglucian](https://github.com/loadinglucian) in https://github.com/ugarit/boost/pull/801
+* Preserve empty objects in MCP JSON config files by [@mwikala](https://github.com/mwikala) in https://github.com/ugarit/boost/pull/793
+* Pin GitHub Actions to commit SHAs and add Dependabot config by [@joetannenbaum](https://github.com/joetannenbaum) in https://github.com/ugarit/boost/pull/804
+* Bump shivammathur/setup-php from 2.37.0 to 2.37.1 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/ugarit/boost/pull/806
+* Sync Flux UI free/pro component lists with fluxui.dev by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/808
+* Omit cwd from Codex MCP config to fix Sail and worktree issues by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/809
+* Add Tinker MCP tool (opt-in via config) by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/807
+
+### New Contributors
+
+* [@dipaksarkar](https://github.com/dipaksarkar) made their first contribution in https://github.com/ugarit/boost/pull/796
+* [@barrytarter](https://github.com/barrytarter) made their first contribution in https://github.com/ugarit/boost/pull/790
+* [@loadinglucian](https://github.com/loadinglucian) made their first contribution in https://github.com/ugarit/boost/pull/801
+* [@mwikala](https://github.com/mwikala) made their first contribution in https://github.com/ugarit/boost/pull/793
+* [@joetannenbaum](https://github.com/joetannenbaum) made their first contribution in https://github.com/ugarit/boost/pull/804
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.6...v2.4.7
+
+## [v2.4.6](https://github.com/ugarit/boost/compare/v2.4.5...v2.4.6) - 2026-04-28
+
+### What's Changed
+
+* Add Ugarit Cloud integration to install command by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/776
+* Added better instructions for generating tests. by [@samlev](https://github.com/samlev) in https://github.com/ugarit/boost/pull/781
+* Handle Http::pool errors when downloading remote skills by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/785
+* Remove model discovery and use token-based class parsing by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/754
+* Remove skills listing from foundation guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/787
+
+### New Contributors
+
+* [@samlev](https://github.com/samlev) made their first contribution in https://github.com/ugarit/boost/pull/781
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.5...v2.4.6
+
+## [v2.4.5](https://github.com/ugarit/boost/compare/v2.4.4...v2.4.5) - 2026-04-22
+
+### What's Changed
+
+* Support ugarit/mcp 0.7.0 by [@gdebrauwer](https://github.com/gdebrauwer) in https://github.com/ugarit/boost/pull/782
+
+### New Contributors
+
+* [@gdebrauwer](https://github.com/gdebrauwer) made their first contribution in https://github.com/ugarit/boost/pull/782
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.4...v2.4.5
+
+## [v2.4.4](https://github.com/ugarit/boost/compare/v2.4.3...v2.4.4) - 2026-04-16
+
+### What's Changed
+
+* Feature: skills list command by [@me-shaon](https://github.com/me-shaon) in https://github.com/ugarit/boost/pull/750
+* feat(agents): add Kiro IDE agent support by [@oniice](https://github.com/oniice) in https://github.com/ugarit/boost/pull/765
+* Add undocumented config override for enforce_tests by [@yousefkadah](https://github.com/yousefkadah) in https://github.com/ugarit/boost/pull/767
+* Fix: Update outdated Livewire paths to v4 standards in SKILL.blade.php by [@Naimul007A](https://github.com/Naimul007A) in https://github.com/ugarit/boost/pull/736
+* Move deployment guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/774
+
+### New Contributors
+
+* [@me-shaon](https://github.com/me-shaon) made their first contribution in https://github.com/ugarit/boost/pull/750
+* [@oniice](https://github.com/oniice) made their first contribution in https://github.com/ugarit/boost/pull/765
+* [@yousefkadah](https://github.com/yousefkadah) made their first contribution in https://github.com/ugarit/boost/pull/767
+* [@Naimul007A](https://github.com/Naimul007A) made their first contribution in https://github.com/ugarit/boost/pull/736
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.3...v2.4.4
+
+## [v2.4.3](https://github.com/ugarit/boost/compare/v2.4.2...v2.4.3) - 2026-04-10
+
+### What's Changed
+
+* Add missing upsert breaking change and emphasize cache prefix config in v13 upgrade guide by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/761
+* Replace Request with UpdatePostRequest by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/741
+* Improve accuracy of Ugarit best practices guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/764
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.2...v2.4.3
+
+## [v2.4.2](https://github.com/ugarit/boost/compare/v2.4.1...v2.4.2) - 2026-04-07
+
+### What's Changed
+
+* Add scope-based first-party detection to Composer by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/712
+* Fix leftover quotes in MCP development skill description by [@thiagogabrielgaia](https://github.com/thiagogabrielgaia) in https://github.com/ugarit/boost/pull/720
+* Improve wayfinder skill description and simplify core guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/708
+* Fix null bytes in style.md skill rule by [@reed1](https://github.com/reed1) in https://github.com/ugarit/boost/pull/727
+* Add mcp_config_path configuration for monorepo support by [@johnbacon](https://github.com/johnbacon) in https://github.com/ugarit/boost/pull/729
+* Use configured PHP executable path in ToolExecutor subprocess by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/730
+* Fix inverted enum naming convention condition in PHP guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/732
+* Prevents re-injecting in Livewire navigate responses by [@alihamze](https://github.com/alihamze) in https://github.com/ugarit/boost/pull/734
+* Conditionally render MCP guideline sections by [@Xiol](https://github.com/Xiol) in https://github.com/ugarit/boost/pull/722
+* Fix: Normalize line endings in MarkdownFormatter by [@GoneTone](https://github.com/GoneTone) in https://github.com/ugarit/boost/pull/739
+* Fix retryUntil return type from DateTime to DateTimeInterface by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/753
+* Guide pest skill to match project's test()/it() convention by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/752
+* fix the incorrect return type for retryUntil() method in queue job guidelines by [@iz-ahmad](https://github.com/iz-ahmad) in https://github.com/ugarit/boost/pull/748
+* Use relative MCP paths for Claude Code agent by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/757
+* Add deployment section to Ugarit core guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/758
+
+### New Contributors
+
+* [@thiagogabrielgaia](https://github.com/thiagogabrielgaia) made their first contribution in https://github.com/ugarit/boost/pull/720
+* [@reed1](https://github.com/reed1) made their first contribution in https://github.com/ugarit/boost/pull/727
+* [@johnbacon](https://github.com/johnbacon) made their first contribution in https://github.com/ugarit/boost/pull/729
+* [@alihamze](https://github.com/alihamze) made their first contribution in https://github.com/ugarit/boost/pull/734
+* [@Xiol](https://github.com/Xiol) made their first contribution in https://github.com/ugarit/boost/pull/722
+* [@iz-ahmad](https://github.com/iz-ahmad) made their first contribution in https://github.com/ugarit/boost/pull/748
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.1...v2.4.2
+
+## [v2.4.1](https://github.com/ugarit/boost/compare/v2.4.0...v2.4.1) - 2026-03-25
+
+### What's Changed
+
+* Update Inertia v3 upgrade prompt to stable and add missing sections by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/717
+* Strip HTML comments before parsing skill frontmatter by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/711
+* Escape Blade component tags in guideline rendering by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/718
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.4.0...v2.4.1
+
+## [v2.4.0](https://github.com/ugarit/boost/compare/v2.3.4...v2.4.0) - 2026-03-23
+
+### What's Changed
+
+* Fix typo in Livewire skill description by [@bram-pkg](https://github.com/bram-pkg) in https://github.com/ugarit/boost/pull/695
+* Remove Herd MCP integration in favor of Herd CLI by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/666
+* Add security audit to add-skill command by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/616
+* Add oauth field to OpenCode Nightwatch MCP config by [@DGarbs51](https://github.com/DGarbs51) in https://github.com/ugarit/boost/pull/703
+* Add ugarit-best-practices skill by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/628
+* Feat: ignore skills update command by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/702
+* Improve folio-routing skill description and remove core guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/674
+* Optimize core guideline for token efficiency by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/668
+
+### New Contributors
+
+* [@bram-pkg](https://github.com/bram-pkg) made their first contribution in https://github.com/ugarit/boost/pull/695
+* [@DGarbs51](https://github.com/DGarbs51) made their first contribution in https://github.com/ugarit/boost/pull/703
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.3.4...v2.4.0
+
+## [v2.3.4](https://github.com/ugarit/boost/compare/v2.3.3...v2.3.4) - 2026-03-17
+
+### What's Changed
+
+* Remove Roster object caching to fix Ugarit 13 serialization issue by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/692
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.3.3...v2.3.4
+
+## [v2.3.3](https://github.com/ugarit/boost/compare/v2.3.2...v2.3.3) - 2026-03-17
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.3.2...v2.3.3
+
+## [v2.3.2](https://github.com/ugarit/boost/compare/v2.3.1...v2.3.2) - 2026-03-16
+
+### What's Changed
+
+* Use major.minor PHP version in guidelines instead of full version by [@oddvalue](https://github.com/oddvalue) in https://github.com/ugarit/boost/pull/657
+* Remove redundant Tailwind CSS guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/661
+* Add Upgrade Ugarit v13 MCP prompt by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/658
+* Use `app_path()` helper to support customized app locations by [@iWader](https://github.com/iWader) in https://github.com/ugarit/boost/pull/665
+* Configure sail binary path by [@iWader](https://github.com/iWader) in https://github.com/ugarit/boost/pull/664
+* fix: register installed skills in boost.json during add-skill by [@meirdick](https://github.com/meirdick) in https://github.com/ugarit/boost/pull/621
+* Add `--discover` flag to `boost:update` by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/651
+* Remove redundant "When to Apply" sections from skill bodies by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/669
+* Guard against file_get_contents() returning false by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/671
+* fix: resolve relative symlinks when skills path is outside project root by [@tjmartin69](https://github.com/tjmartin69) in https://github.com/ugarit/boost/pull/673
+* Update pest-testing skill descriptions and clean up core guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/670
+* Rewrite Livewire core guidelines and skill descriptions in imperative style by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/672
+
+### New Contributors
+
+* [@oddvalue](https://github.com/oddvalue) made their first contribution in https://github.com/ugarit/boost/pull/657
+* [@iWader](https://github.com/iWader) made their first contribution in https://github.com/ugarit/boost/pull/665
+* [@meirdick](https://github.com/meirdick) made their first contribution in https://github.com/ugarit/boost/pull/621
+* [@tjmartin69](https://github.com/tjmartin69) made their first contribution in https://github.com/ugarit/boost/pull/673
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.3.1...v2.3.2
+
+## [v2.3.1](https://github.com/ugarit/boost/compare/v2.3.0...v2.3.1) - 2026-03-12
+
+### What's Changed
+
+* Decode HTML entities in Blade guideline output by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/654
+* Add configurable Codex MCP cwd by [@cyppe](https://github.com/cyppe) in https://github.com/ugarit/boost/pull/642
+
+### New Contributors
+
+* [@cyppe](https://github.com/cyppe) made their first contribution in https://github.com/ugarit/boost/pull/642
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.3.0...v2.3.1
+
+## [v2.3.0](https://github.com/ugarit/boost/compare/v2.2.3...v2.3.0) - 2026-03-11
+
+### What's Changed
+
+* Fix table snippet in SKILL.blade.php by [@AndrasMa](https://github.com/AndrasMa) in https://github.com/ugarit/boost/pull/640
+* Remove Scribe wrapper MCP tools and update guidelines to use CLI directly by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/629
+* Remove redundant MCP guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/644
+* Remove redundant Pennant guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/645
+* Makes imports consistent by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/646
+* Support JSON-formatted log entries in log reading tools by [@HeathNaylor](https://github.com/HeathNaylor) in https://github.com/ugarit/boost/pull/650
+* Remove redundant Flux UI guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/647
+* Add UpgradeInertiaV3 prompt for Inertia v2 to v3 upgrades by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/636
+* Prevent non-JSON stdout output from corrupting MCP tool responses by [@OmarFaruk-0x01](https://github.com/OmarFaruk-0x01) in https://github.com/ugarit/boost/pull/641
+
+### New Contributors
+
+* [@AndrasMa](https://github.com/AndrasMa) made their first contribution in https://github.com/ugarit/boost/pull/640
+* [@HeathNaylor](https://github.com/HeathNaylor) made their first contribution in https://github.com/ugarit/boost/pull/650
+* [@OmarFaruk-0x01](https://github.com/OmarFaruk-0x01) made their first contribution in https://github.com/ugarit/boost/pull/641
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.2.3...v2.3.0
+
+## [v2.2.3](https://github.com/ugarit/boost/compare/v2.2.2...v2.2.3) - 2026-03-06
+
+### What's Changed
+
+* Add two spaces by [@xiCO2k](https://github.com/xiCO2k) in https://github.com/ugarit/boost/pull/632
+* Fix duplicate guidelines when using symlinked paths by [@damianlewis](https://github.com/damianlewis) in https://github.com/ugarit/boost/pull/634
+* Ugarit 13.x Compatibility by [@ugarit-shift](https://github.com/ugarit-shift) in https://github.com/ugarit/boost/pull/633
+* Add First Party Packages by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/635
+* Use configured executable paths when rendering skill templates by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/638
+
+### New Contributors
+
+* [@damianlewis](https://github.com/damianlewis) made their first contribution in https://github.com/ugarit/boost/pull/634
+* [@ugarit-shift](https://github.com/ugarit-shift) made their first contribution in https://github.com/ugarit/boost/pull/633
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.2.2...v2.2.3
+
+## [v2.2.2](https://github.com/ugarit/boost/compare/v2.2.1...v2.2.2) - 2026-03-03
+
+### What's Changed
+
+* Fix SearchDocs crashing when MCP client passes array params as JSON strings by [@digitall-it](https://github.com/digitall-it) in https://github.com/ugarit/boost/pull/604
+* Fix skill discovery for repos with non-main default branches by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/610
+* Fix crash in GuidelineAssist when app/ directory does not exist by [@mforcer](https://github.com/mforcer) in https://github.com/ugarit/boost/pull/617
+* Fix Sail is incorrectly detected as active inside devcontainers by [@Taimst](https://github.com/Taimst) in https://github.com/ugarit/boost/pull/614
+* Compile custom Blade skills to markdown instead of symlinking raw templates by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/611
+* Widen ugarit/mcp version constraint to support v0.6.0 by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/623
+* Update Junie agent to use configurable mcp path by [@cswgr](https://github.com/cswgr) in https://github.com/ugarit/boost/pull/626
+* Support SKILL.blade.php in GitHubSkillProvider discovery by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/627
+
+### New Contributors
+
+* [@mforcer](https://github.com/mforcer) made their first contribution in https://github.com/ugarit/boost/pull/617
+* [@Taimst](https://github.com/Taimst) made their first contribution in https://github.com/ugarit/boost/pull/614
+* [@cswgr](https://github.com/cswgr) made their first contribution in https://github.com/ugarit/boost/pull/626
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.2.1...v2.2.2
+
+## [v2.2.1](https://github.com/ugarit/boost/compare/v2.2.0...v2.2.1) - 2026-02-25
+
+### What's Changed
+
+* Fix third-party skills excluded when aiGuidelines is uninitialized by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/596
+* Add summary mode to DatabaseSchema tool by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/595
+* Add support for Ampcode by [@dringrayson](https://github.com/dringrayson) in https://github.com/ugarit/boost/pull/598
+* Simplify Tinker tool to wrap scribe tinker --execute by [@soleinjast](https://github.com/soleinjast) in https://github.com/ugarit/boost/pull/557
+* Consolidate Inertia versioned guidelines into single core file by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/603
+
+#### Minor Breaking Chnage
+
+If you have custom overrides in:
+
+```text
+.ai/guidelines/inertia-ugarit/1/core.blade.php
+.ai/guidelines/inertia-ugarit/2/core.blade.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+move them to:
+
+```text
+.ai/guidelines/inertia-ugarit/core.blade.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+### New Contributors
+
+* [@dringrayson](https://github.com/dringrayson) made their first contribution in https://github.com/ugarit/boost/pull/598
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.2.0...v2.2.1
+
+## [v2.2.0](https://github.com/ugarit/boost/compare/v2.1.8...v2.2.0) - 2026-02-20
+
+### What’s Changed
+
+- Added support for loading guidelines and skills directly from vendor packages by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/566
+
+#### Minor Breaking Changes
+
+This release introduces a small structural update to how Inertia guidelines are organized.
+
+**Previously**
+
+```
+.ai/inertia-ugarit/core.blade.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+**Now merged into individual version guideline**
+
+```
+.ai/inertia-ugarit/2/core.blade.php
+.ai/inertia-ugarit/1/core.blade.php
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+Guidelines are now resolved using the following priority order:
+
+| Priority | Source | Maintained By |
+|----------|--------|---------------|
+| 1st | `.ai/guidelines/` in the user project | Project developer |
+| 2nd | `vendor/{pkg}/resources/boost/guidelines/` | Composer package maintainer |
+| 2nd | `node_modules/{pkg}/resources/boost/guidelines/` | npm package maintainer |
+| 3rd | Built-in Boost `.ai/` directory | Boost team |
+
+Make sure you update to the latest version of all related packages to stay compatible.
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.8...v2.2.0
+
+## [v2.1.8](https://github.com/ugarit/boost/compare/v2.1.7...v2.1.8) - 2026-02-20
+
+### What's Changed
+
+* Fix read-only bypass in DatabaseQuery via CTE-wrapped writes by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/588
+* Fix sendBeacon browser logs silently dropped on page unload by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/590
+* Fix post-install Next steps URL by [@sulimanbenhalim](https://github.com/sulimanbenhalim) in https://github.com/ugarit/boost/pull/587
+* Fix issue with Codex not automatically triggering the login flow by [@jessarcher](https://github.com/jessarcher) in https://github.com/ugarit/boost/pull/592
+* Scope Pint guideline to PHP file changes only by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/593
+* Allow overriding the browser log channel by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/594
+
+### New Contributors
+
+* [@sulimanbenhalim](https://github.com/sulimanbenhalim) made their first contribution in https://github.com/ugarit/boost/pull/588
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.7...v2.1.8
+
+## [v2.1.7](https://github.com/ugarit/boost/compare/v2.1.6...v2.1.7) - 2026-02-18
+
+### What's Changed
+
+* Add option to exclude specific guidelines and skills via config by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/580
+* fix: blade skills with code before frontmatter are parsed correctly by [@calebdw](https://github.com/calebdw) in https://github.com/ugarit/boost/pull/582
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.6...v2.1.7
+
+## [v2.1.6](https://github.com/ugarit/boost/compare/v2.1.5...v2.1.6) - 2026-02-16
+
+### What's Changed
+
+* Fix default value for browser_logs config in core guideline by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/574
+* Add support for Nightwatch MCP by [@jessarcher](https://github.com/jessarcher) in https://github.com/ugarit/boost/pull/575
+
+### New Contributors
+
+* [@jessarcher](https://github.com/jessarcher) made their first contribution in https://github.com/ugarit/boost/pull/575
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.5...v2.1.6
+
+## [v2.1.5](https://github.com/ugarit/boost/compare/v2.1.4...v2.1.5) - 2026-02-16
+
+### What's Changed
+
+* Truncate large log entries in LastError tool response by [@leek](https://github.com/leek) in https://github.com/ugarit/boost/pull/568
+* Prevent duplicate Boost guidelines in CLAUDE.md by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/577
+
+### New Contributors
+
+* [@leek](https://github.com/leek) made their first contribution in https://github.com/ugarit/boost/pull/568
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.4...v2.1.5
+
+## [v2.1.4](https://github.com/ugarit/boost/compare/v2.1.3...v2.1.4) - 2026-02-13
+
+### What's Changed
+
+* Fix missing output key in Tinker tool error response by [@Orlando-Villanueva](https://github.com/Orlando-Villanueva) in https://github.com/ugarit/boost/pull/561
+* Add file paths and format guidance to Livewire 4 skill by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/543
+* Add model binding and page content examples to Folio routing skill by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/544
+* Update MCP development skill with accurate API patterns and testing by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/545
+* Update usePoll usage in skill by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/570
+
+### New Contributors
+
+* [@Orlando-Villanueva](https://github.com/Orlando-Villanueva) made their first contribution in https://github.com/ugarit/boost/pull/561
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.3...v2.1.4
+
+## [v2.1.3](https://github.com/ugarit/boost/compare/v2.1.2...v2.1.3) - 2026-02-11
+
+### What's Changed
+
+* Remove experimental third-party MCP primitives by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/552
+* Add symlink install mode for skills by [@hosmelq](https://github.com/hosmelq) in https://github.com/ugarit/boost/pull/499
+* Add additional newline before end-guideline fence by [@ChipNeedham](https://github.com/ChipNeedham) in https://github.com/ugarit/boost/pull/565
+* Update Roster by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/562
+
+### New Contributors
+
+* [@hosmelq](https://github.com/hosmelq) made their first contribution in https://github.com/ugarit/boost/pull/499
+* [@ChipNeedham](https://github.com/ChipNeedham) made their first contribution in https://github.com/ugarit/boost/pull/565
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.2...v2.1.3
+
+## [v2.1.2](https://github.com/ugarit/boost/compare/v2.1.1...v2.1.2) - 2026-02-10
+
+### What's Changed
+
+* Enhance database-schema tool with full column metadata by [@alanost](https://github.com/alanost) in https://github.com/ugarit/boost/pull/541
+* Replace >- block scalar with single-line descriptions in SKILL files by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/547
+* fix: apply table prefix to raw SQL queries in DatabaseQuery tool by [@soleinjast](https://github.com/soleinjast) in https://github.com/ugarit/boost/pull/529
+* Fix normalizeCommand() splitting absolute paths containing spaces by [@digitall-it](https://github.com/digitall-it) in https://github.com/ugarit/boost/pull/553
+* Fix code snippet styling to use fenced code blocks by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/555
+* Use cmd /c for Windows agent detection commands by [@soleinjast](https://github.com/soleinjast) in https://github.com/ugarit/boost/pull/558
+
+### New Contributors
+
+* [@alanost](https://github.com/alanost) made their first contribution in https://github.com/ugarit/boost/pull/541
+* [@digitall-it](https://github.com/digitall-it) made their first contribution in https://github.com/ugarit/boost/pull/553
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.1...v2.1.2
+
+## [v2.1.1](https://github.com/ugarit/boost/compare/v2.1.0...v2.1.1) - 2026-02-06
+
+### What's Changed
+
+* Add Flux Icons documentation to SKILL.md files by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/494
+* Detect Inertia pages directory casing from filesystem by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/534
+* Graceful cache fallback when cache driver is unreachable by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/533
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.1.0...v2.1.1
+
+## [v2.1.0](https://github.com/ugarit/boost/compare/v2.0.6...v2.1.0) - 2026-02-05
+
+### What's Changed
+
+* fix(gemini): escape @ symbols in foundational context by [@soleinjast](https://github.com/soleinjast) in https://github.com/ugarit/boost/pull/523
+* Add project-level mcp support for Codex by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/525
+* Unify agent paths for guidelines and skills configuration which supports .agents standard by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/528
+* Handle Rate Limits Error in Add Skill Command by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/520
+
+### New Contributors
+
+* [@soleinjast](https://github.com/soleinjast) made their first contribution in https://github.com/ugarit/boost/pull/523
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.6...v2.1.0
+
+## [v2.0.6](https://github.com/ugarit/boost/compare/v2.0.5...v2.0.6) - 2026-02-04
+
+### What's Changed
+
+* Adding support for Junie skills by [@balu-lt](https://github.com/balu-lt) in https://github.com/ugarit/boost/pull/510
+* Filter orphaned packages from config by [@lucianotonet](https://github.com/lucianotonet) in https://github.com/ugarit/boost/pull/506
+* Configure Executables Path by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/491
+* Fix skills activation section by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/516
+* Fix Sail Guideline Overwrite issue by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/521
+
+### New Contributors
+
+* [@lucianotonet](https://github.com/lucianotonet) made their first contribution in https://github.com/ugarit/boost/pull/506
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.5...v2.0.6
+
+## [v2.0.5](https://github.com/ugarit/boost/compare/v2.0.4...v2.0.5) - 2026-02-01
+
+### What's Changed
+
+* Update message for ide -> agent in InstallCommand by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/490
+* Remove stale files during skill directory updates by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/492
+* Fix database-schema tool to only return tables from configured database by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/498
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.4...v2.0.5
+
+## [v2.0.4](https://github.com/ugarit/boost/compare/v2.0.3...v2.0.4) - 2026-01-28
+
+### What's Changed
+
+* Update skills path in Copilot configuration by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/488
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.3...v2.0.4
+
+## [v2.0.3](https://github.com/ugarit/boost/compare/v2.0.2...v2.0.3) - 2026-01-28
+
+### What's Changed
+
+* Sort user guidelines by filename for predictable ordering by [@patrickomeara](https://github.com/patrickomeara) in https://github.com/ugarit/boost/pull/474
+* fix typo in pest skill by [@lukasleitsch](https://github.com/lukasleitsch) in https://github.com/ugarit/boost/pull/486
+
+### New Contributors
+
+* [@patrickomeara](https://github.com/patrickomeara) made their first contribution in https://github.com/ugarit/boost/pull/474
+* [@lukasleitsch](https://github.com/lukasleitsch) made their first contribution in https://github.com/ugarit/boost/pull/486
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.2...v2.0.3
+
+## [v2.0.2](https://github.com/ugarit/boost/compare/v2.0.1...v2.0.2) - 2026-01-27
+
+### What's Changed
+
+* Exclude Livewire skills and guidelines for indirect dependencies (#477) by [@zcuric](https://github.com/zcuric) in https://github.com/ugarit/boost/pull/478
+* Update Flux UI documentation for verbatim usage by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/476
+
+### New Contributors
+
+* [@zcuric](https://github.com/zcuric) made their first contribution in https://github.com/ugarit/boost/pull/478
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.1...v2.0.2
+
+## [v2.0.1](https://github.com/ugarit/boost/compare/v2.0.0...v2.0.1) - 2026-01-26
+
+### What's Changed
+
+* Format pint.json by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/467
+* Update UPGRADE.md by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/470
+* Use skills directory instead of skill for OpenCode by [@thijsvdanker](https://github.com/thijsvdanker) in https://github.com/ugarit/boost/pull/472
+
+### New Contributors
+
+* [@thijsvdanker](https://github.com/thijsvdanker) made their first contribution in https://github.com/ugarit/boost/pull/472
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v2.0.0...v2.0.1
+
+## [v2.0.0](https://github.com/ugarit/boost/compare/v1.8.10...v2.0.0) - 2026-01-24
+
+### What's Changed
+
+* Skills Support by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/421
+* Formatting changes by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/438
+* Refactor installation UX by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/439
+* Add tests for tool execution and error handling by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/447
+* Refactor `RendersBladeGuidelines` namespace and update references by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/449
+* Add Skill Sync by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/444
+* Implement package priority system and filtering for package discovery by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/450
+* Move Boost Docs to Ugarit Docs by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/453
+* Update installation questions by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/452
+* Add 2.x Upgrade Guide by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/446
+* tests: add coverage for DatabaseQuery tool by [@sakshamgorey](https://github.com/sakshamgorey) in https://github.com/ugarit/boost/pull/454
+* Refactor MCP related tests by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/448
+* Add Gradient to Boost Logo by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/455
+* Update minimum PHP and Ugarit versions by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/459
+* Add boost:add-skill command by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/458
+* Add --no-interaction flag to wayfinder skills command by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/461
+* Add validation UpdateCommand to handle errors by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/462
+* Formatting by [@taylorotwell](https://github.com/taylorotwell) in https://github.com/ugarit/boost/pull/463
+* Inertia vue skill syntax by [@Bottelet](https://github.com/Bottelet) in https://github.com/ugarit/boost/pull/464
+
+### Upgrade Guide
+
+You can find the upgrade guide for version 2.x [here](https://github.com/ugarit/boost/blob/main/UPGRADE.md)
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.10...v2.0.0
+
+## [v1.8.10](https://github.com/ugarit/boost/compare/v1.8.9...v1.8.10) - 2026-01-14
+
+### What's Changed
+
+* Add Ugarit Code Simplifier Prompt by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/416
+* Update README installation instructions by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/417
+* Add Livewire v4 upgrade prompt by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/424
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.9...v1.8.10
+
+## [v1.8.9](https://github.com/ugarit/boost/compare/v1.8.8...v1.8.9) - 2026-01-07
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.8...v1.8.9
+
+## [v1.8.8](https://github.com/ugarit/boost/compare/v1.8.7...v1.8.8) - 2026-01-07
+
+* Add `--compact` flag to testing examples by [@ohnotnow](https://github.com/ohnotnow) in https://github.com/ugarit/boost/pull/403
+* Update bug report issue template by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/410
+* Remove ReportFeedback tool by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/409
+* fix: improve middleware register specification for ugarit 11 and 12 by [@PanchoDP](https://github.com/PanchoDP) in https://github.com/ugarit/boost/pull/398
+* Update documentation for 'search-docs' tool usage by [@blakedeckard](https://github.com/blakedeckard) in https://github.com/ugarit/boost/pull/401
+* Mention when private constructors are ok by [@cosmastech](https://github.com/cosmastech) in https://github.com/ugarit/boost/pull/387
+* Consistency and quality pass by [@taylorotwell](https://github.com/taylorotwell) in https://github.com/ugarit/boost/pull/413
+
+## [v1.8.7](https://github.com/ugarit/boost/compare/v1.8.6...v1.8.7) - 2025-12-19
+
+### What's Changed
+
+* Refactor filterPrimitives method to improve class string handling  by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/395
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.6...v1.8.7
+
+## [v1.8.6](https://github.com/ugarit/boost/compare/v1.8.5...v1.8.6) - 2025-12-19
+
+### What's Changed
+
+* Correct grammar in Editor Setup header by [@tooshay](https://github.com/tooshay) in https://github.com/ugarit/boost/pull/381
+* [1.x] chore: improve workflow by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/385
+* Simplify tool and resource discovery logic in MCP by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/383
+* [1.x] chore: improve tests by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/386
+* Add Resource and Prompts for Package Guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/389
+* Bump ugarit/mcp package version by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/393
+* Allow configurable guideline paths for AI agents by [@jordanpartridge](https://github.com/jordanpartridge) in https://github.com/ugarit/boost/pull/392
+* Fix log file resolution for stack logging driver by [@sabist](https://github.com/sabist) in https://github.com/ugarit/boost/pull/388
+* Refactor agent selection logic in InstallCommand by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/394
+
+### New Contributors
+
+* [@tooshay](https://github.com/tooshay) made their first contribution in https://github.com/ugarit/boost/pull/381
+* [@jordanpartridge](https://github.com/jordanpartridge) made their first contribution in https://github.com/ugarit/boost/pull/392
+* [@sabist](https://github.com/sabist) made their first contribution in https://github.com/ugarit/boost/pull/388
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.5...v1.8.6
+
+## [v1.8.5](https://github.com/ugarit/boost/compare/v1.8.4...v1.8.5) - 2025-12-08
+
+### What's Changed
+
+* PHP 8.5 support by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/368
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.4...v1.8.5
+
+## [v1.8.4](https://github.com/ugarit/boost/compare/v1.8.3...v1.8.4) - 2025-12-05
+
+### What's Changed
+
+* Update Boost for `ugarit/mcp` ^0.4.1 compatibility by [@xybr-dev](https://github.com/xybr-dev) in https://github.com/ugarit/boost/pull/375
+
+### New Contributors
+
+* [@xybr-dev](https://github.com/xybr-dev) made their first contribution in https://github.com/ugarit/boost/pull/375
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.3...v1.8.4
+
+## [v1.8.3](https://github.com/ugarit/boost/compare/v1.8.2...v1.8.3) - 2025-11-26
+
+### What's Changed
+
+* Update FluxUI component list by [@rzv-me](https://github.com/rzv-me) in https://github.com/ugarit/boost/pull/369
+
+### New Contributors
+
+* [@rzv-me](https://github.com/rzv-me) made their first contribution in https://github.com/ugarit/boost/pull/369
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.2...v1.8.3
+
+## [v1.8.2](https://github.com/ugarit/boost/compare/v1.8.1...v1.8.2) - 2025-11-20
+
+### What's Changed
+
+* tests: adds missing opencode in tests by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/361
+* Add Gemini by [@iruoy](https://github.com/iruoy) in https://github.com/ugarit/boost/pull/360
+* Extend Codex functionality with MCP config by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/364
+* Update README.md by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/365
+* Downgrade guzzle version to ^7.9 by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/356
+* Put user-defined guidelines at the top by [@phpfour](https://github.com/phpfour) in https://github.com/ugarit/boost/pull/332
+
+### New Contributors
+
+* [@iruoy](https://github.com/iruoy) made their first contribution in https://github.com/ugarit/boost/pull/360
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.1...v1.8.2
+
+## [v1.8.1](https://github.com/ugarit/boost/compare/v1.8.0...v1.8.1) - 2025-11-18
+
+### What's Changed
+
+* Add Sail Support in Guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/329
+* Fix CallToolWithExecutor Error by [@RedArchon](https://github.com/RedArchon) in https://github.com/ugarit/boost/pull/359
+
+### New Contributors
+
+* [@RedArchon](https://github.com/RedArchon) made their first contribution in https://github.com/ugarit/boost/pull/359
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.8.0...v1.8.1
+
+## [v1.8.0](https://github.com/ugarit/boost/compare/v1.7.1...v1.8.0) - 2025-11-11
+
+### What's Changed
+
+* Ignore MCP config update in boost:update by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/334
+* Update wayfinder guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/343
+* Remove Filament guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/349
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.7.1...v1.8.0
+
+## [v1.7.1](https://github.com/ugarit/boost/compare/v1.7.0...v1.7.1) - 2025-11-05
+
+### What's Changed
+
+* [1.x] Fix: WSL by changing 'wsl' to 'wsl.exe' in MCP config by [@MrPunyapal](https://github.com/MrPunyapal) in https://github.com/ugarit/boost/pull/338
+* Add wayfinder guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/327
+* Update Readme about .gitignore files by [@chinmaypurav](https://github.com/chinmaypurav) in https://github.com/ugarit/boost/pull/307
+* Update Tailwind v4+ guidelines  by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/321
+
+### New Contributors
+
+* [@MrPunyapal](https://github.com/MrPunyapal) made their first contribution in https://github.com/ugarit/boost/pull/338
+* [@chinmaypurav](https://github.com/chinmaypurav) made their first contribution in https://github.com/ugarit/boost/pull/307
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.7.0...v1.7.1
+
+## [v1.7.0](https://github.com/ugarit/boost/compare/v1.6.0...v1.7.0) - 2025-11-04
+
+### What's Changed
+
+* feat: add opencode support by [@calebdw](https://github.com/calebdw) in https://github.com/ugarit/boost/pull/88
+* Fix Invalid Argument Error with MCP tool by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/323
+* [1.x] Refactor to use first-class callable by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/315
+* [1.x] Sail Support for Boost by [@NIAN97](https://github.com/NIAN97) in https://github.com/ugarit/boost/pull/303
+* Remove duplicate code in GuidelineComposer.php by [@phpfour](https://github.com/phpfour) in https://github.com/ugarit/boost/pull/331
+* Handle `@volt` directives in GuidelineComposer by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/333
+
+### New Contributors
+
+* [@NIAN97](https://github.com/NIAN97) made their first contribution in https://github.com/ugarit/boost/pull/303
+* [@phpfour](https://github.com/phpfour) made their first contribution in https://github.com/ugarit/boost/pull/331
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.6.0...v1.7.0
+
+## [v1.6.0](https://github.com/ugarit/boost/compare/v1.5.1...v1.6.0) - 2025-10-28
+
+* [1.x] Add support for markdown files by [@adrum](https://github.com/adrum) in https://github.com/ugarit/boost/pull/319
+
+## [v1.5.1](https://github.com/ugarit/boost/compare/v1.5.0...v1.5.1) - 2025-10-25
+
+### What's Changed
+
+* bump roster by [@adrum](https://github.com/adrum) in https://github.com/ugarit/boost/pull/318
+
+### New Contributors
+
+* [@adrum](https://github.com/adrum) made their first contribution in https://github.com/ugarit/boost/pull/318
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.5.0...v1.5.1
+
+## [v1.5.0](https://github.com/ugarit/boost/compare/v1.4.0...v1.5.0) - 2025-10-24
+
+### What's Changed
+
+* Add PhpStorm detection path for Windows by [@GoneTone](https://github.com/GoneTone) in https://github.com/ugarit/boost/pull/304
+* Dynamic NPM Package Runner by [@imliam](https://github.com/imliam) in https://github.com/ugarit/boost/pull/145
+
+### New Contributors
+
+* [@GoneTone](https://github.com/GoneTone) made their first contribution in https://github.com/ugarit/boost/pull/304
+* [@imliam](https://github.com/imliam) made their first contribution in https://github.com/ugarit/boost/pull/145
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.4.0...v1.5.0
+
+## [v1.4.0](https://github.com/ugarit/boost/compare/v1.3.3...v1.4.0) - 2025-10-14
+
+### What's Changed
+
+* [1.x] Add Support for Custom Code Environments by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/280
+* Fix boolean parameter handling in ListRoutes MCP tool by [@systempath](https://github.com/systempath) in https://github.com/ugarit/boost/pull/279
+* Fix Ugarit 10 bootstrap/app.php Documentation Inaccuracy by [@paulschoeman](https://github.com/paulschoeman) in https://github.com/ugarit/boost/pull/224
+
+### New Contributors
+
+* [@systempath](https://github.com/systempath) made their first contribution in https://github.com/ugarit/boost/pull/279
+* [@paulschoeman](https://github.com/paulschoeman) made their first contribution in https://github.com/ugarit/boost/pull/224
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.3.3...v1.4.0
+
+## [v1.3.3](https://github.com/ugarit/boost/compare/v1.3.2...v1.3.3) - 2025-10-13
+
+### What's Changed
+
+* fix: prefer fluxui-pro guidelines over fluxui-free by [@PanchoDP](https://github.com/PanchoDP) in https://github.com/ugarit/boost/pull/292
+
+### New Contributors
+
+* [@PanchoDP](https://github.com/PanchoDP) made their first contribution in https://github.com/ugarit/boost/pull/292
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.3.2...v1.3.3
+
+## [v1.3.2](https://github.com/ugarit/boost/compare/v1.3.1...v1.3.2) - 2025-10-13
+
+### What's Changed
+
+* [1.x] Update token limit default to 3000 tokens in SearchDocs by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/293
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.3.1...v1.3.2
+
+## [v1.3.1](https://github.com/ugarit/boost/compare/v1.3.0...v1.3.1) - 2025-10-13
+
+### What's Changed
+
+* [1.x] Update ugarit/mcp dependency to support 0.3.0 version by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/297
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.3.0...v1.3.1
+
+## [v1.3.0](https://github.com/ugarit/boost/compare/v1.2.1...v1.3.0) - 2025-09-30
+
+### What's Changed
+
+* [1.x] Adds `boost:update` + allows package authors to publish guidelines by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/277
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.2.1...v1.3.0
+
+## [v1.2.1](https://github.com/ugarit/boost/compare/v1.1.5...v1.2.1) - 2025-09-23
+
+### What's Changed
+
+* Update roster to 0.2.7 by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/266
+* docs: guidelines: initial ugarit/mcp guidelines by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/267
+* Update Pint Config by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/269
+* Update checkout action to version 5 by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/271
+* Enhance MCP commands for WSL compatibility by [@HichemTab-tech](https://github.com/HichemTab-tech) in https://github.com/ugarit/boost/pull/121
+* Updated access modifiers from `private` to `protected` across multiple files by [@andrey-helldar](https://github.com/andrey-helldar) in https://github.com/ugarit/boost/pull/249
+* Ensure guideline file content ends with a newline by [@balu-lt](https://github.com/balu-lt) in https://github.com/ugarit/boost/pull/113
+* Don't include mcp always by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/273
+* Fix test name by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/274
+
+### New Contributors
+
+* [@HichemTab-tech](https://github.com/HichemTab-tech) made their first contribution in https://github.com/ugarit/boost/pull/121
+* [@andrey-helldar](https://github.com/andrey-helldar) made their first contribution in https://github.com/ugarit/boost/pull/249
+* [@balu-lt](https://github.com/balu-lt) made their first contribution in https://github.com/ugarit/boost/pull/113
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.2.0...v1.2.1
+
+## [v1.2.0](https://github.com/ugarit/boost/compare/v1.1.5...v1.2.0) - 2025-09-18
+
+* uses latest version of ugarit mcp
+
+## [v1.1.5](https://github.com/ugarit/boost/compare/v1.1.4...v1.1.5) - 2025-09-18
+
+### What's Changed
+
+* docs: README: light/dark mode logo by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/148
+* ci: remove unneeded SSH keys now MCP package is public by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/255
+* fix: remove stray parenthesis in lifecycle hook guidance in livewire guidelines by [@mohammedyh](https://github.com/mohammedyh) in https://github.com/ugarit/boost/pull/261
+* fix: correct syntax in Tailwind v4 import code snippet by [@mr-chetan](https://github.com/mr-chetan) in https://github.com/ugarit/boost/pull/221
+* tests: convert multiple expectations into chain by [@felipeArnold](https://github.com/felipeArnold) in https://github.com/ugarit/boost/pull/232
+* Add Codex Guideline Support by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/258
+* Update scroll value for Agent selection box by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/262
+* Add support for Vite CSP nonce by [@nckrtl](https://github.com/nckrtl) in https://github.com/ugarit/boost/pull/142
+
+### New Contributors
+
+* [@mohammedyh](https://github.com/mohammedyh) made their first contribution in https://github.com/ugarit/boost/pull/261
+* [@mr-chetan](https://github.com/mr-chetan) made their first contribution in https://github.com/ugarit/boost/pull/221
+* [@nckrtl](https://github.com/nckrtl) made their first contribution in https://github.com/ugarit/boost/pull/142
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.1.4...v1.1.5
+
+## [v1.1.4](https://github.com/ugarit/boost/compare/v1.1.3...v1.1.4) - 2025-09-04
+
+### What's Changed
+
+* feat: add windows to tests CI check by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/244
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.1.3...v1.1.4
+
+## [v1.1.3](https://github.com/ugarit/boost/compare/v1.1.2...v1.1.3) - 2025-09-04
+
+### What's Changed
+
+* fix: package priorities should work on php8.1 by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/243
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.1.2...v1.1.3
+
+## [v1.1.2](https://github.com/ugarit/boost/compare/v1.1.1...v1.1.2) - 2025-09-04
+
+### What's Changed
+
+* feat: add package priority guideline inclusion by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/242
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.1.1...v1.1.2
+
+## [v1.1.1](https://github.com/ugarit/boost/compare/v1.1.0...v1.1.1) - 2025-09-04
+
+### What's Changed
+
+* Add strict types declaration in Inertia.php by [@felipeArnold](https://github.com/felipeArnold) in https://github.com/ugarit/boost/pull/229
+* feat: update roster requirement, fixes #237 now phpunit will be detected by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/239
+
+### New Contributors
+
+* [@felipeArnold](https://github.com/felipeArnold) made their first contribution in https://github.com/ugarit/boost/pull/229
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.1.0...v1.1.1
+
+## [v1.1.0](https://github.com/ugarit/boost/compare/v1.0.21...v1.1.0) - 2025-09-04
+
+### What's Changed
+
+* Always-on process isolation: eliminate conditional complexity by [@andreilungeanu](https://github.com/andreilungeanu) in https://github.com/ugarit/boost/pull/184
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.21...v1.1.0
+
+## [v1.0.21](https://github.com/ugarit/boost/compare/v1.0.20...v1.0.21) - 2025-09-03
+
+### What's Changed
+
+* Fix random 'parse error' when running test suite by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/223
+* Clarify ListRoutes name parameter description for better tool calling by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/182
+* Streamline ToolResult assertions in tests  by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/225
+* Allow guideline overriding by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/219
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.20...v1.0.21
+
+## [v1.0.20](https://github.com/ugarit/boost/compare/v1.0.19...v1.0.20) - 2025-08-28
+
+### What's Changed
+
+* fix: defer InjectBoost middleware registration until app is booted by [@Sairahcaz](https://github.com/Sairahcaz) in https://github.com/ugarit/boost/pull/172
+* feat: add robust MCP file configuration writer by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/204
+* Feat: Detect env changes by default, fixes 130 by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/217
+
+### New Contributors
+
+* [@Sairahcaz](https://github.com/Sairahcaz) made their first contribution in https://github.com/ugarit/boost/pull/172
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.19...v1.0.20
+
+## [v1.0.19](https://github.com/ugarit/boost/compare/v1.0.18...v1.0.19) - 2025-08-27
+
+### What's Changed
+
+* Refactor creating ugarit application instance using Testbench by [@crynobone](https://github.com/crynobone) in https://github.com/ugarit/boost/pull/127
+* Fix Tailwind CSS title on README.md for consistency by [@xavizera](https://github.com/xavizera) in https://github.com/ugarit/boost/pull/159
+* feat: don't run Boost during testing by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/144
+* Hide Internal Command `ExecuteToolCommand.php` from Scribe List by [@yitzwillroth](https://github.com/yitzwillroth) in https://github.com/ugarit/boost/pull/155
+* chore: removes non necessary php version constrant by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/166
+* chore: removes non necessary pint version constrant by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/ugarit/boost/pull/167
+* Do not autoload classes while boost:install by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/180
+* fix: prevent unwanted "null" file creation on Windows during installation by [@andreilungeanu](https://github.com/andreilungeanu) in https://github.com/ugarit/boost/pull/189
+* Improve `InjectBoost` middleware for response-type handling by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/179
+* docs: README: Add Nova 4.x and 5.x by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/213
+* refactor: change ./scribe to scribe by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/214
+* feat: guidelines: add Inertia form guidelines by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/211
+
+### New Contributors
+
+* [@crynobone](https://github.com/crynobone) made their first contribution in https://github.com/ugarit/boost/pull/127
+* [@xavizera](https://github.com/xavizera) made their first contribution in https://github.com/ugarit/boost/pull/159
+* [@nunomaduro](https://github.com/nunomaduro) made their first contribution in https://github.com/ugarit/boost/pull/166
+* [@andreilungeanu](https://github.com/andreilungeanu) made their first contribution in https://github.com/ugarit/boost/pull/189
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.18...v1.0.19
+
+## [v1.0.18](https://github.com/ugarit/boost/compare/v1.0.17...v1.0.18) - 2025-08-16
+
+### What's Changed
+
+* fix: Prevent install command from breaking when `/tests` doesn't exist by [@sagalbot](https://github.com/sagalbot) in https://github.com/ugarit/boost/pull/93
+* [1.x] Add enabled option to `config/boost.php`. by [@xiCO2k](https://github.com/xiCO2k) in https://github.com/ugarit/boost/pull/143
+
+### New Contributors
+
+* [@sagalbot](https://github.com/sagalbot) made their first contribution in https://github.com/ugarit/boost/pull/93
+* [@xiCO2k](https://github.com/xiCO2k) made their first contribution in https://github.com/ugarit/boost/pull/143
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.17...v1.0.18
+
+## [v1.0.17](https://github.com/ugarit/boost/compare/v1.0.16...v1.0.17) - 2025-08-14
+
+### What's Changed
+
+* Fix: Replace APP_DEBUG with environment-based gating by [@eduardocruz](https://github.com/eduardocruz) in https://github.com/ugarit/boost/pull/90
+
+### New Contributors
+
+* [@eduardocruz](https://github.com/eduardocruz) made their first contribution in https://github.com/ugarit/boost/pull/90
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.16...v1.0.17
+
+## [v1.0.16](https://github.com/ugarit/boost/compare/v1.0.15...v1.0.16) - 2025-08-14
+
+### What's Changed
+
+* refactor: streamline path resolution and simplify the MCP client interface by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/111
+* Fix PHPStorm using absolute paths by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/109
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.15...v1.0.16
+
+## [v1.0.15](https://github.com/ugarit/boost/compare/v1.0.14...v1.0.15) - 2025-08-14
+
+### What's Changed
+
+* fixes #67 by only finding files that begin with an uppercase letter by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/116
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.14...v1.0.15
+
+## [v1.0.14](https://github.com/ugarit/boost/compare/v1.0.13...v1.0.14) - 2025-08-14
+
+### What's Changed
+
+* Fixes #85 by adding verbatim to flux component example by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/114
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.13...v1.0.14
+
+## [v1.0.13](https://github.com/ugarit/boost/compare/v1.0.12...v1.0.13) - 2025-08-14
+
+### What's Changed
+
+* Fix volt blade parsing by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/112
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.12...v1.0.13
+
+## [v1.0.12](https://github.com/ugarit/boost/compare/v1.0.11...v1.0.12) - 2025-08-14
+
+### What's Changed
+
+* tool: tinker: try to nudge away from creating test users ahead of time by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/108
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.11...v1.0.12
+
+## [v1.0.11](https://github.com/ugarit/boost/compare/v1.0.10...v1.0.11) - 2025-08-14
+
+### What's Changed
+
+* tools: report-feedback: strengthen language on privacy by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/103
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.10...v1.0.11
+
+## [v1.0.10](https://github.com/ugarit/boost/compare/v1.0.9...v1.0.10) - 2025-08-14
+
+### What's Changed
+
+* fixes #70 - make sure foundational rules are composed by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/84
+* Update the bug report template's system info section by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/98
+* Update Filament Guidelines by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/ugarit/boost/pull/35
+* Fix: Prevent autoloading non class-like files during discovery to avoid "FatalError: Cannot redeclare function" by [@zdearo](https://github.com/zdearo) in https://github.com/ugarit/boost/pull/99
+
+### New Contributors
+
+* [@zdearo](https://github.com/zdearo) made their first contribution in https://github.com/ugarit/boost/pull/99
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.9...v1.0.10
+
+## [v1.0.9](https://github.com/ugarit/boost/compare/v1.0.8...v1.0.9) - 2025-08-13
+
+### What's Changed
+
+* fixes #80 - install Boost MCP into Claude via file instead of shell by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/82
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.8...v1.0.9
+
+## [v1.0.8](https://github.com/ugarit/boost/compare/v1.0.3...v1.0.8) - 2025-08-13
+
+### What's Changed
+
+* fixes #80 by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/81
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.7...v1.0.8
+
+## [v1.0.3](https://github.com/ugarit/boost/compare/v1.0.2...v1.0.3) - 2025-08-13
+
+### What's Changed
+
+* Update Pint Guideline to Use `--dirty` Flag by [@yitzwillroth](https://github.com/yitzwillroth) in https://github.com/ugarit/boost/pull/43
+* docs: README: add filament by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/58
+* Fix Herd detection by [@mpociot](https://github.com/mpociot) in https://github.com/ugarit/boost/pull/61
+* fix #49: disable boost inject if HTML isn't expected by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/60
+
+### New Contributors
+
+* [@yitzwillroth](https://github.com/yitzwillroth) made their first contribution in https://github.com/ugarit/boost/pull/43
+* [@mpociot](https://github.com/mpociot) made their first contribution in https://github.com/ugarit/boost/pull/61
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.2...v1.0.3
+
+## [v1.0.2](https://github.com/ugarit/boost/compare/v1.0.1...v1.0.2) - 2025-08-13
+
+### What's Changed
+
+* update ugarit/roster version by [@ashleyhindle](https://github.com/ashleyhindle) in https://github.com/ugarit/boost/pull/42
+* Update core.blade.php by [@meatpaste](https://github.com/meatpaste) in https://github.com/ugarit/boost/pull/41
+
+### New Contributors
+
+* [@meatpaste](https://github.com/meatpaste) made their first contribution in https://github.com/ugarit/boost/pull/41
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.1...v1.0.2
+
+## [v1.0.1](https://github.com/ugarit/boost/compare/v1.0.0...v1.0.1) - 2025-08-13
+
+**Full Changelog**: https://github.com/ugarit/boost/compare/v1.0.0...v1.0.1
+
+## [v1.0.0](https://github.com/ugarit/boost/compare/v0.1.0...v1.0.0) - 2025-08-13
+
+- Initial release of Ugarit Boost.
+
+## v0.1.0 (202x-xx-xx)
+
+Initial pre-release.

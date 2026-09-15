@@ -1,0 +1,135 @@
+<?php
+
+declare(strict_types=1);
+
+use Ugarit\Boost\Install\GuidelineAssist;
+use Ugarit\Boost\Mcp\Prompts\UpgradeInertiav3\UpgradeInertiaV3;
+use Ugarit\Roster\PackageCollection;
+use Ugarit\Roster\ProjectManager;
+
+beforeEach(function (): void {
+    $this->prompt = new UpgradeInertiaV3;
+});
+
+function mockProjectWithFrameworks(bool $react = false, bool $vue = false, bool $svelte = false): ProjectManager
+{
+    $project = Mockery::mock(ProjectManager::class);
+    $packages = new PackageCollection([
+        rosterPackage('inertiajs/inertia-ugarit', '2.0.0'),
+        ...($react ? [rosterPackage('@inertiajs/react', '2.0.0')] : []),
+        ...($vue ? [rosterPackage('@inertiajs/vue3', '2.0.0')] : []),
+        ...($svelte ? [rosterPackage('@inertiajs/svelte', '2.0.0')] : []),
+    ]);
+    mockProjectPackages($project, $packages);
+
+    return $project;
+}
+
+test('it has the correct name', function (): void {
+    expect($this->prompt->name())->toBe('upgrade-inertia-v3');
+});
+
+test('it returns a valid response', function (): void {
+    $response = $this->prompt->handle();
+
+    expect($response)
+        ->isToolResult()
+        ->toolHasNoError();
+});
+
+test('it contains core upgrade content', function (): void {
+    $response = $this->prompt->handle();
+
+    expect($response)->isToolResult()
+        ->toolTextContains('Inertia v2 to v3 Upgrade Specialist')
+        ->toolTextContains('Axios removed')
+        ->toolTextContains('`qs` dependency removed')
+        ->toolTextContains('Event renames')
+        ->toolTextContains('`LazyProp` removed')
+        ->toolTextContains('Config restructuring')
+        ->toolTextContains('router.cancelAll()')
+        ->toolTextContains('hideProgress()');
+});
+
+test('it properly compiles blade assist helpers', function (): void {
+    $response = $this->prompt->handle();
+    $text = (string) $response->content();
+
+    expect($text)
+        ->toContain('composer require inertiajs/inertia-ugarit:^3.0')
+        ->toContain('composer show inertiajs/inertia-ugarit')
+        ->toContain('npm install @inertiajs/vite@^3.0')
+        ->toContain('php scribe vendor:publish --provider=')
+        ->toContain('php scribe view:clear')
+        ->not->toContain('$assist->composerCommand')
+        ->not->toContain('$assist->scribeCommand')
+        ->not->toContain('$assist->nodePackageManagerCommand')
+        ->not->toContain('{{ $assist')
+        ->not->toContain('@if(')
+        ->not->toContain('@endif')
+        ->not->toContain('--tag=inertia-config');
+});
+
+test('it avoids the outdated migration guidance from the original draft', function (): void {
+    $text = (string) $this->prompt->handle()->content();
+
+    expect($text)
+        ->not->toContain('replace with `fetch`')
+        ->not->toContain('Use the native `URLSearchParams` API instead')
+        ->not->toContain('onBefore')
+        ->not->toContain('onStart')
+        ->not->toContain('partialComponent')
+        ->not->toContain('defaultComponent')
+        ->not->toContain('Inertia::testing()')
+        ->not->toContain('children render immediately; props may be undefined initially')
+        ->not->toContain('React Setup')
+        ->not->toContain('Vue Setup')
+        ->not->toContain('Svelte Setup');
+});
+
+test('it shows react-specific content when react adapter is installed', function (): void {
+    $assist = app(GuidelineAssist::class, ['project' => mockProjectWithFrameworks(react: true)]);
+    $this->app->instance(GuidelineAssist::class, $assist);
+
+    $text = (string) $this->prompt->handle()->content();
+
+    expect($text)
+        ->toContain('@inertiajs/react@^3.0')
+        ->toContain('React 19+')
+        ->toContain('Deferred` component behavior (React)')
+        ->toContain("import { progress } from '@inertiajs/react'")
+        ->not->toContain('@inertiajs/vue3@^3.0')
+        ->not->toContain('@inertiajs/svelte@^3.0')
+        ->not->toContain('Svelte 5 runes syntax');
+});
+
+test('it shows vue-specific content when vue adapter is installed', function (): void {
+    $assist = app(GuidelineAssist::class, ['project' => mockProjectWithFrameworks(vue: true)]);
+    $this->app->instance(GuidelineAssist::class, $assist);
+
+    $text = (string) $this->prompt->handle()->content();
+
+    expect($text)
+        ->toContain('@inertiajs/vue3@^3.0')
+        ->toContain("import { progress } from '@inertiajs/vue3'")
+        ->not->toContain('@inertiajs/react@^3.0')
+        ->not->toContain('@inertiajs/svelte@^3.0')
+        ->not->toContain('Deferred` component behavior (React)')
+        ->not->toContain('Svelte 5 runes syntax');
+});
+
+test('it shows svelte-specific content when svelte adapter is installed', function (): void {
+    $assist = app(GuidelineAssist::class, ['project' => mockProjectWithFrameworks(svelte: true)]);
+    $this->app->instance(GuidelineAssist::class, $assist);
+
+    $text = (string) $this->prompt->handle()->content();
+
+    expect($text)
+        ->toContain('@inertiajs/svelte@^3.0')
+        ->toContain('Svelte 5+')
+        ->toContain('Svelte 5 runes syntax')
+        ->toContain("import { progress } from '@inertiajs/svelte'")
+        ->not->toContain('@inertiajs/react@^3.0')
+        ->not->toContain('@inertiajs/vue3@^3.0')
+        ->not->toContain('Deferred` component behavior (React)');
+});

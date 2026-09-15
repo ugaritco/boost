@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+use Ugarit\Boost\Install\Assists\Inertia;
+use Ugarit\Roster\ProjectManager;
+
+beforeEach(function (): void {
+    $this->project = Mockery::mock(ProjectManager::class);
+
+    $this->inertia = new Inertia($this->project);
+});
+
+afterEach(function (): void {
+    $jsPath = base_path('resources/js');
+
+    if (is_dir($jsPath.'/pages')) {
+        rmdir($jsPath.'/pages');
+    }
+
+    if (is_dir($jsPath.'/Pages')) {
+        rmdir($jsPath.'/Pages');
+    }
+
+    if (is_dir($jsPath)) {
+        rmdir($jsPath);
+    }
+
+    if (is_dir(base_path('resources'))) {
+        @rmdir(base_path('resources'));
+    }
+});
+
+it('returns PascalCase Pages directory as default when no resources/js directory exists', function (): void {
+    expect($this->inertia->pagesDirectory())->toBe('resources/js/Pages');
+});
+
+it('returns lowercase pages directory when it exists on disk', function (): void {
+    $jsPath = base_path('resources/js');
+    mkdir($jsPath, 0755, true);
+    mkdir($jsPath.'/pages', 0755);
+
+    expect($this->inertia->pagesDirectory())->toBe('resources/js/pages');
+    expect($this->inertia->pagesDirectory())->not->toBe('resources/js/Pages');
+});
+
+it('returns PascalCase Pages directory when it exists on disk', function (): void {
+    $jsPath = base_path('resources/js');
+    mkdir($jsPath, 0755, true);
+    mkdir($jsPath.'/Pages', 0755);
+
+    expect($this->inertia->pagesDirectory())->toBe('resources/js/Pages');
+    expect($this->inertia->pagesDirectory())->not->toBe('resources/js/pages');
+});
