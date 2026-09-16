@@ -361,10 +361,7 @@ class InstallCommand extends Command
 
         $defaults = collect($this->config->getAgents())
             ->filter(fn (string $name) => $filteredAgents->has($name))
-            ->whenEmpty(fn () => collect([...$this->projectInstalledAgents, ...$this->systemInstalledAgents])
-                ->unique()
-                ->filter(fn (string $name) => $filteredAgents->has($name))
-            )
+            ->whenEmpty(fn () => $options->keys())
             ->values();
 
         if (! $this->input->isInteractive()) {
