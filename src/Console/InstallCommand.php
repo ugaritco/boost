@@ -49,7 +49,8 @@ class InstallCommand extends Command
     protected $signature = 'boost:install
         {--guidelines : Install AI guidelines}
         {--skills : Install agent skills}
-        {--mcp : Install MCP server configuration}';
+        {--mcp : Install MCP server configuration}
+        {--agent=* : The AI agent(s) to configure}';
 
     /** @var Collection<int, Agent> */
     private Collection $selectedAgents;
@@ -363,6 +364,19 @@ class InstallCommand extends Command
             ->filter(fn (string $name) => $filteredAgents->has($name))
             ->whenEmpty(fn () => $options->keys())
             ->values();
+
+        $agentOption = (array) $this->option('agent');
+        if (! empty($agentOption)) {
+            $selected = $filteredAgents->filter(function (Agent $agent) use ($agentOption) {
+                return in_array($agent->name(), $agentOption, true)
+                    || in_array(Str::slug($agent->displayName()), $agentOption, true)
+                    || in_array('all', $agentOption, true);
+            });
+
+            if ($selected->isNotEmpty()) {
+                return $selected->values();
+            }
+        }
 
         if (! $this->input->isInteractive()) {
             return $defaults
