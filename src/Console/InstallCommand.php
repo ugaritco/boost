@@ -360,10 +360,10 @@ class InstallCommand extends Command
             ->mapWithKeys(fn (Agent $agent): array => [$agent->name() => $agent->displayName()])
             ->sort();
 
-        $defaults = collect($this->config->getAgents())
-            ->filter(fn (string $name) => $filteredAgents->has($name))
-            ->whenEmpty(fn () => $options->keys())
-            ->values();
+        $savedAgents = $this->config->getAgents();
+        $defaults = ! empty($savedAgents)
+            ? collect($savedAgents)->filter(fn (string $name) => $filteredAgents->has($name))->values()
+            : $options->keys();
 
         $agentOption = (array) $this->option('agent');
         if (! empty($agentOption)) {
