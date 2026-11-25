@@ -201,15 +201,20 @@ class InstallCommand extends Command
             return (bool) config('boost.enforce_tests');
         }
 
-        if (! file_exists(base_path('vendor/bin/phpunit'))) {
+        if (! file_exists(base_path('vendor/bin/phpunit')) && ! file_exists(base_path('vendor/bin/pest'))) {
             return false;
         }
 
         $process = new Process([PHP_BINARY, 'scribe', 'test', '--list-tests'], base_path());
+        $process->setTimeout(10);
 
         try {
             $process->run();
-        } catch (ProcessSignaledException) {
+
+            if (! $process->isSuccessful()) {
+                return false;
+            }
+        } catch (\Throwable) {
             return false;
         }
 
